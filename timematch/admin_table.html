@@ -1,0 +1,244 @@
+<?
+header("Content-Type:text/html;charset=utf-8"); 
+
+include_once "/home/www/inc/define.h";
+include_once "$docPath/inc/session.inc";
+
+
+	 if( mb_substr(iconv("euc-kr","utf-8",$s_uid), 0 , 3, 'utf-8') != "운영자" ){
+		exit;
+	}
+
+/*
+$eventnum = "timematch_table";
+user_num : 날짜 (date("Ymd"))
+info : [1,2,3,4] ([11:00, 15:00, 18:00, 21:00])
+num1 : [1,2] (1조, 2조)
+data8 : [Y,""] (오픈여부)
+*/
+
+	include "/home/www/inc/db_connect.inc";
+	mysql_query("set names 'utf8'");
+
+	$eventnum = "timematch_table";
+
+	$yoil = array("일","월","화","수","목","금","토");
+	$view_time = array("00:00","11:00","15:00","17:00","21:00");
+
+	$set_date = $_POST["set_date"];
+	$set_time = $_POST["set_time"];
+	
+
+	
+	if(!$set_time){
+		$ori_set_time = "none";
+		$set_time = 1;
+	}
+
+
+function getWeek($date){
+    $DEFAULT_DAYS = 1; //1 ~ 7 (월 ~ 일)
+    list($yy, $mm, $dd) = explode('-', $date);
+    $first_day = date('N', mktime(0,0,0,$mm, 1, $yy));
+
+    if($first_day <= $DEFAULT_DAYS){  
+        $remain_days = $DEFAULT_DAYS - $first_day;
+        $next_monday = $remain_days +1;
+    }else{
+        $remain_days= 7 - $first_day;
+        $next_monday = $remain_days + $DEFAULT_DAYS +1;
+	}
+
+    if($dd < $next_monday){
+        $new_date = date('Y-M-d', mktime(0,0,0,$mm,0,$yy));
+        return getWeek($new_date);
+    }else{
+        $week = ceil(($dd-($next_monday -1))/7);
+        return $week;
+    }
+}
+
+	$time = mktime(0,0,0,date("m"),date("d"),date("Y"));
+
+	$t = date("w");
+	$tt = (6+$t)%7;
+
+
+?>
+<style>
+td{font-family:'굴림',Gulim,Helvetica,sans-serif;font-size:13px;color:#000}
+</style>
+<script type="text/javascript" src="/js/jquery-lastest.js"></script>
+<script>
+	function set_date(val){
+		document.thisform.std_date.value = val;
+		document.thisform.set_date.value = val;
+		document.thisform.submit();
+	}
+
+	function click_date(val){
+		document.thisform.set_date.value = val;
+		document.thisform.submit();
+	}
+</script>
+
+
+<input type="button" value="예약신청" style="width:100px;height:40px;" onclick="javascript:location.href='admin.html'">
+<input type="button" value="대진표" style="width:100px;height:40px;color:blue;" onclick="javascript:location.href='admin_table.html'">
+<input type="button" value="신청 히스토리" style="width:100px;height:40px;" onclick="javascript:location.href='admin_reserve_history.html'">
+<input type="button" value="대진 히스토리" style="width:100px;height:40px;" onclick="javascript:location.href='admin_table_history.html'">
+<input type="button" value="베팅 히스토리" style="width:100px;height:40px;" onclick="javascript:location.href='admin_bet_history.html'">
+<br>
+
+
+<form name="thisform" method="post" action="<?=$PHP_SELF?>">
+<input type="hidden" name="std_date" value="<?=$std_date?>">
+<input type="hidden" name="set_date" id="set_date" value="<?=$set_date?>">
+</form>
+<select onchange="javascript:set_date(this.value)" style="height:30px;">
+<?
+for($i=0; $i<4; $i++){
+	$t = $time-(($tt)*60*60*24) + ((60*60*24*7)*$i);
+	$event_now_date = date("Y-m-d",$t);
+
+if($i ==0){
+	$thisdate = $t;
+}
+?>
+<option value="<?=$t?>" <? if($t == $std_date){echo "selected";}?>> <?=date("m", $t)?>월 <?=getWeek($event_now_date)?>주차 | <?=$event_now_date?>
+<?
+}
+?>
+</select>
+<br><br>
+
+<?
+
+if(!$set_date && !$std_date){
+	$set_date = $time;
+?><script>document.thisform.std_date.value = "<?=$thisdate?>";document.thisform.std_date.value = "<?=$thisdate?>";document.thisform.set_date.value = "<?=$time?>";$("#set_btn0").css("color","blue")</script><?
+}
+
+
+
+if(!$std_date && !$set_date){
+	$std_date = $thisdate;
+//	$set_date	= $thisdate;
+}
+
+
+if($std_date > 0){
+	$this_time = $std_date;
+}else{
+	$this_time = $thisdate;
+}
+
+for($i=0; $i<7; $i++){
+
+	$t = $this_time + ((60*60*24)*$i);
+	$event_now_date = date("m/d",$t);
+
+?><input type="button" id="set_btn<?=$i?>" value="<?=$event_now_date?>(<?=$yoil[date('w', $t)]?>)" style="width:100px;height:40px;cursor:pointer;<? if($set_date == $t){echo 'color:blue;';} ?>" onclick="javascript:click_date('<?=$t?>')"> <?
+}
+
+?>
+
+
+
+<!--
+<br><br>
+<form name="timeform" method="post" action="<?=$PHP_SELF?>">
+<select name="set_date" style="height:30px;" onchange="document.timeform.submit()">
+<? 
+	for($i=0; $i<7; $i++){
+	$timestamp = strtotime("+".$i." days");
+	$yoil_txt = $yoil[date("w", $timestamp)];
+?>
+	<option value="<?=date('Ymd',$timestamp)?>" <? if($set_date == date('Ymd',$timestamp)){echo "selected";}?>><?= date("Y년 m월 d일", $timestamp)?>(<?=$yoil_txt?>)
+<?}?>
+</select>
+</form>
+
+
+<? for($i=1; $i<=4; $i++){?>
+<input type="button" value="<?=$view_time[$i]?>" id="set_time<?=$i?>" style="width:80px;height:30px;<? if($set_time == $i){echo 'color:blue;';}?>" onclick="javascript:document.setform.set_time.value=<?=$i?>;document.setform.submit();">
+<?}?>
+<form name="setform" method="post" action="<?=$PHP_SELF?>">
+<input type="hidden" name="set_date" value="<?=$set_date?>">
+<input type="hidden" name="set_time" value="<?=$set_time?>">
+</form>
+-->
+
+
+<?
+if($ori_set_time == "none"){
+	$sql_order = "select * from tygem_eventlist where eventnum = '$eventnum' and user_num=$set_date and data8='Y' order by info limit 1";
+	$query_order = mysql_query($sql_order, $connect);
+	$data_order = mysql_fetch_array($query_order);
+
+
+	if($data_order["info"] > 0){
+		$set_time = $data_order["info"];
+	}
+}
+?>
+
+
+<br><br>
+<? for($i=1; $i<=4; $i++){?>
+<input type="button" value="<?=$view_time[$i]?>" id="set_time<?=$i?>" style="width:80px;height:30px;<? if($set_time == $i){echo 'color:blue;';}?>" onclick="javascript:document.setform.set_time.value=<?=$i?>;document.setform.submit();">
+<?}?>
+<form name="setform" method="post" action="<?=$PHP_SELF?>">
+<input type="hidden" name="set_date" value="<?=$set_date?>">
+<input type="hidden" name="set_time" value="<?=$set_time?>">
+<input type="hidden" name="std_date" value="<?=$std_date?>">
+</form>
+
+
+<br><br>
+
+
+<? for($i=1; $i<=2; $i++){
+	
+	$sql = "select * from tygem_eventlist where eventnum = '$eventnum' and user_num=$set_date and info='$set_time' and num1=$i";
+	$query = mysql_query($sql, $connect);
+	$data = mysql_fetch_array($query);
+
+	$data1 = $data["data1"];
+	$data2 = $data["data2"];
+	$data3 = $data["data3"];
+	$data4 = $data["data4"];
+	$data5 = $data["data5"];
+	$data6 = $data["data6"];
+	$data7 = $data["data7"];
+
+	$data8 = $data["data8"];
+?>
+<form name="thisform<?=$i?>" method="post" action="admin_table_process.php" target="hiddenFrame">
+<input type="hidden" name="set_date" value="<?=$set_date?>">
+<input type="hidden" name="set_time" value="<?=$set_time?>">
+<input type="hidden" name="num1" value="<?=$i?>">
+<table>
+	<tr>
+		<td colspan="2"><?=$i?>조<input type="checkbox" name="data8" value="Y" style="width:30px;height:30px;" <? if($data8 == "Y"){echo "checked";}?>><td>
+		<td align="right"><input type="button" value="저장" style="width:100px;height:30px;" onclick="javascript:document.thisform<?=$i?>.submit()"></td>
+	</tr>
+
+	<tr>
+		<td colspan="4" align="center"><input type="text" name="data1" value="<?=$data1?>" style="width:100px;height:26px"></td>
+	</tr>
+	<tr>
+		<td colspan="2" align="center"><input type="text" name="data2" value="<?=$data2?>" style="width:100px;height:26px"></td>
+		<td colspan="2" align="center"><input type="text" name="data3" value="<?=$data3?>" style="width:100px;height:26px"></td>
+	</tr>
+	<tr>
+		<td align="center"><input type="text" name="data4" value="<?=$data4?>" style="width:100px;height:26px"></td>
+		<td align="center"><input type="text" name="data5" value="<?=$data5?>" style="width:100px;height:26px"></td>
+		<td align="center"><input type="text" name="data6" value="<?=$data6?>" style="width:100px;height:26px"></td>
+		<td align="center"><input type="text" name="data7" value="<?=$data7?>" style="width:100px;height:26px"></td>
+	</tr>
+</table>
+</form>
+<br><br>
+<?}?>
+<iframe name="hiddenFrame" style="display:none" title="hiddenFrame"></iframe>

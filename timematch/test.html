@@ -1,0 +1,44 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+exit;
+
+include "/home/www/inc/db_con_baduklevel.php";
+
+
+
+	$sql = "delete from baduk_people_dictionary_2022";
+	$query = mysql_query($sql, $db_con_baduklevel);
+
+
+
+$xml = file_get_contents("http://file.tygem.com/client/dicpeople/dicpeople.xml");
+$result_xml = simplexml_load_string($xml);
+
+
+foreach ($result_xml->peo as $value){
+	
+	$user_num = $value->pht;
+	$id = $value->id;
+	$user_nick = $value->nick;
+	$country_code = $value->scode;
+	$ko = $value->ko;
+	$ch = $value->ch;
+	$ja = $value->ja;
+	$ta = $value->ta;
+	$en = $value->en;
+
+//	$sql_check = "select count(*) from baduk_people_dictionary where user_num=$user_num";
+//	$query_check = mysql_query($sql_check, $db_con_baduklevel);
+//	$data_check = mysql_fetch_array($query_check);
+
+	$sql = "insert into baduk_people_dictionary_2022(user_num, user_nick, country_code, ko, ch, ja, ta, en, reg_date) values ($user_num, '$user_nick', $country_code, '$ko', '$ch', '$ja', '$ta', '$en', now())";
+	$query = mysql_query($sql, $db_con_baduklevel);
+
+	//echo $sql;
+
+
+	
+}
+
+?>
+<script>alert("update ¿Ï·á");window.close();</script>

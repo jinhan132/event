@@ -1,0 +1,146 @@
+<?
+header("Content-Type:text/html;charset=utf-8"); 
+
+include_once "/home/www/inc/define.h";
+include_once "$docPath/inc/session.inc";
+
+
+	 if( mb_substr(iconv("euc-kr","utf-8",$s_uid), 0 , 3, 'utf-8') != "운영자" ){
+		exit;
+	}
+
+	
+	$year = date("Y");
+	$month = date("m");
+	$day = date("d");
+
+?>
+<style>
+td{font-family:'굴림',Gulim,Helvetica,sans-serif;font-size:13px;color:#000}
+</style>
+<script type="text/javascript" src="/js/jquery-lastest.js"></script>
+<script language="javascript" src="./calendar.js"></script>
+<script>
+	function bet_info(){
+
+		var game_time = $("#game_time").val();
+		var user1 = decodeURIComponent($("#user1").val());
+		var user2 = decodeURIComponent($("#user2").val());
+
+if(user1 == "" || user2 == ""){
+	alert("대국자");
+	return;
+}
+
+		$("#view_txt").html("LOADING...");
+		$.post("admin_bet_history_info.php", {"user1" : user1, "user2" : user2, "game_time" : game_time}, function(data){
+			$("#view_txt").html(data);
+		});
+
+	}
+</script>
+<script>
+	function submit_data(idx){
+		var game_endtime = $("#game_endtime"+idx).val();
+		var black_bet_ratio = $("#black_bet_ratio"+idx).val();
+		var black_totalbetmoney = $("#black_totalbetmoney"+idx).val();
+		var black_id = $("#black_id"+idx).val();
+		var white_id = $("#white_id"+idx).val();
+		var white_totalbetmoney = $("#white_totalbetmoney"+idx).val();
+		var white_bet_ratio = $("#white_bet_ratio"+idx).val();
+		var game_result = $("#game_result"+idx).val();
+		var title_name = $("#title_name"+idx).val();
+		
+		var game_time = $("#game_time").val();
+
+		$.post("admin_bet_history_ins.php", {"game_time" : game_time, "game_endtime" : game_endtime, "black_bet_ratio" : black_bet_ratio, "black_totalbetmoney" : black_totalbetmoney, "black_id" : black_id, "white_id" : white_id, "white_totalbetmoney" : white_totalbetmoney, "white_bet_ratio" : white_bet_ratio, "game_result" : game_result, "title_name" : title_name}, function(data){
+			$("#view_txt2").html(data);
+		});
+
+	}
+
+	function match_list(){
+		var thisyear = $("#thisyear").val();
+		var thismonth = $("#thismonth").val();
+		var thisday = $("#thisday").val();
+
+		var thisinfo = thisyear + thismonth + thisday;
+
+		$("#game_time").val(thisyear+"-"+thismonth+"-"+thisday);
+
+		$.post("admin_bet_history_list.php", {"thisinfo" : thisinfo}, function(data){
+			$("#view_txt2").html(data);
+		});
+
+	}
+
+	function update_data(idx, seq){
+
+		var game_endtime = $("#game_endtime"+idx).val();
+		var black_bet_ratio = $("#black_bet_ratio"+idx).val();
+		var black_totalbetmoney = $("#black_totalbetmoney"+idx).val();
+		var black_id = $("#black_id"+idx).val();
+		var white_id = $("#white_id"+idx).val();
+		var white_totalbetmoney = $("#white_totalbetmoney"+idx).val();
+		var white_bet_ratio = $("#white_bet_ratio"+idx).val();
+		var game_result = $("#game_result"+idx).val();
+		var title_name = $("#title_name"+idx).val();
+		
+		var game_time = $("#game_time").val();
+
+		$.post("admin_bet_history_update.php", {"game_time" : game_time, "game_endtime" : game_endtime, "black_bet_ratio" : black_bet_ratio, "black_totalbetmoney" : black_totalbetmoney, "black_id" : black_id, "white_id" : white_id, "white_totalbetmoney" : white_totalbetmoney, "white_bet_ratio" : white_bet_ratio, "game_result" : game_result, "title_name" : title_name, "seq" : seq}, function(data){
+			match_list();
+			
+		});
+	}
+
+	function delete_data(seq){
+		$.post("admin_bet_history_delete.php", {"seq" : seq}, function(data){
+			match_list();
+		});
+	}
+
+</script>
+
+<input type="button" value="예약신청" style="width:100px;height:40px;" onclick="javascript:location.href='admin.html'">
+<input type="button" value="대진표" style="width:100px;height:40px;" onclick="javascript:location.href='admin_table.html'">
+<input type="button" value="신청 히스토리" style="width:100px;height:40px;" onclick="javascript:location.href='admin_reserve_history.html'">
+<input type="button" value="대진 히스토리" style="width:100px;height:40px;" onclick="javascript:location.href='admin_table_history.html'">
+<input type="button" value="베팅 히스토리" style="width:100px;height:40px;color:blue" onclick="javascript:location.href='admin_bet_history.html'">
+
+<br>
+<br>
+<input type="text" id="user1" placeholder="대국자1" style="width:100px;height:26px"><input type="text" id="user2" placeholder="대국자2" style="width:100px;height:26px"><input type="text" name="game_time" value="<?=date('Y-m-d')?>" onclick="Calendar(this);" id="game_time" style="width:100px;height:26px;"/><input type="button" value="search" onclick="javascript:bet_info()" style="width:80px;height:26px;">&nbsp;
+
+<select style="width:60px;height:26px" id="thisyear" onchange="javascript:match_list()">
+<? for($i=0; $i<5; $i++){?>
+	<option><? echo $year - $i;?>
+<?}?>
+</select>
+<select style="width:42px;height:26px" id="thismonth" onchange="javascript:match_list()">
+<? for($i=1; $i<=12; $i++){
+	$value_i = $i;
+	if(strlen($i) == 1){
+		$value_i = "0".$i;
+	}
+?>
+	<option value="<?=$value_i?>" <? if($i==$month){echo "selected";}?>><?=$value_i?>
+<?}?>
+</select>
+<select style="width:44px;height:26px" id="thisday" onchange="javascript:match_list()">
+<? for($i=1; $i<=31; $i++){
+	$value_i = $i;
+	if(strlen($i) == 1){
+		$value_i = "0".$i;
+	}
+?>
+	<option value="<?=$value_i?>" <? if($i==$day){echo "selected";}?>><?=$value_i?>
+<?}?>
+</select>
+
+<div id="view_txt" style="padding-top:10px;"></div>
+<div id="view_txt2" style="padding-top:10px;"></div>
+
+<script>
+match_list();
+</script>

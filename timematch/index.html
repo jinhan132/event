@@ -1,0 +1,669 @@
+<?
+header("Content-Type:text/html;charset=utf-8"); 
+
+
+$mobile_agent = "/(iPod|iPhone|Android|BlackBerry|SymbianOS|SCH-M\d+|Opera Mini|Windows CE|Nokia|SonyEricsson|webOS|PalmOS)/";
+
+if(preg_match($mobile_agent, $_SERVER['HTTP_USER_AGENT'])){
+
+Header("Location:http://m.tygem.com/event/timematch/");
+}
+
+include_once "/home/www/inc/define.h";
+include_once "$docPath/inc/session.inc";
+
+?>
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+    <meta name="description" content="대한민국 1위 인터넷 바둑사이트! 타이젬! ">
+    <meta name="apple-mobile-web-app-title" content="TYGEM " />
+    <meta property='og:type' content="website"/>
+    <meta property="og:title" content="타이젬:::한중 타임매치::: "/>
+    <meta property="og:description" content="대한민국 1위 인터넷 바둑사이트! 타이젬! ">
+    <meta property="og:image" content="https://www.tygem.com/title.jpg"/>
+    <meta property="og:url" content="https://service.tygem.com/event/timematch/"/>
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="타이젬:::한중 타임매치:::"/>
+    <meta name="twitter:description" content="대한민국 1위 인터넷 바둑사이트! 타이젬! ">
+    <meta name="twitter:image" content="https://www.tygem.com/title.jpg">
+    <meta name="twitter:domain" content="타이젬">
+    <meta name="twitter:url" content="https://service.tygem.com/event/timematch/"/>
+    <link rel="shortcut icon" type="image/x-icon" href="https://www.tygem.com/favicon.png?1" />
+    <link rel="stylesheet" href="//img.tygem.com/images/event/20220927/css/pmatch_style.css?v=2" type="text/css">
+<style>
+.pmatch_matchoff2 {position: absolute;width: 100%;height: 50%;background: rgba(255,255,255,0.9);margin-top: 70%;}
+.pmatch_txt52 {font-size: 20px;font-weight: 500;color: #444;margin-top: 160px;font-family: 'Noto Sans KR', sans-serif;}
+</style>    
+    <title>타이젬:::한중 타임매치:::</title>
+<script type="text/javascript" src="//api.tygem.com/api/common/event_header.js"></script>
+<script type="text/javascript" src="/js/jquery-lastest.js"></script>
+<script src="/js/jquery.countdown.min.js"></script>
+</head>
+<body>
+
+	<div id="pmatch_wrap">
+        <div class="pmatch_top">
+            <h1><span>타이젬</span>한&middot;중 타임매치</h1>
+<? if($s_unum > 0){?>            <button type="button" onclick="javascript:location.href='https://www.tygem.com/login/login_out.php'" class="pmatch_login">로그아웃</button><?}else{?>            <button type="button" onclick="javascript:location.href='https://www.tygem.com/login.php?gotourl=http%3A%2F%2Fservice.tygem.com%2Fevent%2Ftimematch%2F'" class="pmatch_login">로그인</button><?}?>
+        </div>
+
+        <div class="pmatch_con">
+            <div class="pmatch_reserve" id="pmatch_reserve">
+                <div class="pmatch_tit1">
+                    <h2>타임매치 예약</h2>
+                    <div class="pmatch_weekbox">
+                        <select class="pmatch_weekselect">
+                            <option>2022년 1월 1주차</option>
+                            <option>2022년 1월 2주차</option>
+                            <option>2022년 1월 3주차</option>
+                            <option>2022년 1월 4주차</option>
+                        </select>
+                    </div>  
+                    <div class="clear"></div>
+                </div>
+                <div class="pmatch_weeklybox">
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>MON</span><br />1</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>TUE</span><br />2</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>WED</span><br />3</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>THU</span><br />4</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>FRI</span><br />5</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>SAT</span><br />6</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>SUN</span><br />7</p>
+                    </button>
+                </div>
+                <div class="pmatch_timetable">
+                    <div class="pmatch_timeboxlist">
+                        <div class="pmatch_timebox"> 
+                            <div class="pmatch_time">
+                                <p class="pmatch_timeset">11:00</p>
+                                <p class="pmatch_timecount"><span>사전예약 남은 시간</span>00일 00:00:00</p>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="pmatch_playerlist">
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pmatch_playerlist">
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pmatch_timebox"> 
+                            <div class="pmatch_time">
+                                <p class="pmatch_timeset">15:00</p>
+                                <p class="pmatch_timecount"><span>사전예약 남은 시간</span>00일 00:00:00</p>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="pmatch_playerlist">
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+								<div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+								<div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pmatch_playerlist">
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pmatch_timebox"> 
+                            <div class="pmatch_time">
+                                <p class="pmatch_timeset">18:00</p>
+                                <p class="pmatch_timecount"><span>사전예약 남은 시간</span>00일 00:00:00</p>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="pmatch_playerlist">
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pmatch_playerlist">
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pmatch_timebox"> 
+                            <div class="pmatch_time">
+                                <p class="pmatch_timeset">21:00</p>
+                                <p class="pmatch_timecount"><span>사전예약 남은 시간</span>00일 00:00:00</p>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="pmatch_playerlist">
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+								<div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+								<div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+								<div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pmatch_playerlist">
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                                <div class="pmatch_playerbox_no">
+                                    <button type="button" onclick="" class="pmatch_add">
+                                        <div class="pmatch_player_no">
+                                            <p class="pmatch_cross"></p>
+                                        </div>
+                                        <p class="pmatch_txt3">대국예약</p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="pmatch_decoline" style="height: 870px"></p>
+                </div>
+            </div>
+            <div class="pmatch_match" id="pmatch_match">
+                <div class="pmatch_tit1">
+                    <h2>대진표</h2>
+                    <div class="pmatch_weekbox">
+                        <select class="pmatch_weekselect">
+                            <option selected>2022년 8월 1주차</option>
+                            <option>2022년 8월 2주차</option>
+                            <option>2022년 8월 3주차</option>
+                            <option>2022년 8월 4주차</option>
+                        </select>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="pmatch_weeklybox">
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>MON</span><br />1</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>TUE</span><br />2</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>WED</span><br />3</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>THU</span><br />4</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>FRI</span><br />5</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>SAT</span><br />6</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_dayoff">
+                        <p class="pmatch_txt1"><span>SUN</span><br />7</p>
+                    </button>
+                </div>
+                <div class="pmatch_daytimebox">
+                    <button type="button" onclick="" class="pmatch_daytimeoff">
+                        <p class="pmatch_circle"></p><p class="pmatch_txt4">11:00</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_daytimeoff">
+                        <p class="pmatch_circle"></p><p class="pmatch_txt4">15:00</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_daytimeoff">
+                        <p class="pmatch_circle"></p><p class="pmatch_txt4">18:00</p>
+                    </button>
+                    <button type="button" onclick="" class="pmatch_daytimeoff">
+                        <p class="pmatch_circle"></p><p class="pmatch_txt4">21:00</p>
+                    </button>
+                </div>
+                <div class="pmatch_matchtablebox">
+                    <!--대진표없을때-->
+                    <div class="pmatch_matchoff" style="display: none">
+                        <p class="pmatch_txt5">대진표 준비중 입니다.</p>
+                    </div>
+                    <!--대진표없을때 end-->
+                    <div class="pmatch_matchbox" >
+                        <p class="pmatch_txt6">1조 대진표</p>
+                        <div class="pmatch_matchtable">
+                            <div class="pmatch_semiarea">
+                                <div class="pmatch_semi">
+                                    <p class="pmatch_txt9"><span></span></p>
+                                    <p class="pmatch_txt9"><span></span></p>
+                                </div>                                
+                                <div class="pmatch_semi">
+                                    <p class="pmatch_txt9"><span></span></p>
+                                    <p class="pmatch_txt9"><span></span></p>
+                                </div>                                
+                            </div>
+                            <div class="pmatch_finalarea">
+                                <div class="pmatch_final">
+                                    <p class="pmatch_txt9"><span></span></p>
+                                    <p class="pmatch_txt9"><span></span></p>
+                                </div>              
+                            </div>
+                            <div class="pmatch_winner">
+                                <p class="pmatch_txt7"><span></span></p>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                    <div class="pmatch_matchbox">
+                        <p class="pmatch_txt6">2조 대진표</p>
+                        <div class="pmatch_matchtable">
+                            <div class="pmatch_semiarea">
+                                <div class="pmatch_semi">
+                                    <p class="pmatch_txt9"><span></span></p>
+                                    <p class="pmatch_txt9"><span></span></p>
+                                </div>                                
+                                <div class="pmatch_semi">
+                                    <p class="pmatch_txt9"><span></span></p>
+                                    <p class="pmatch_txt9"><span></span></p>
+                                </div>                                
+                            </div>
+                            <div class="pmatch_finalarea">
+                                <div class="pmatch_final">
+                                    <p class="pmatch_txt9"><span></span></p>
+                                    <p class="pmatch_txt9"><span></span></p>
+                                </div>              
+                            </div>
+                            <div class="pmatch_winner">
+                                <p class="pmatch_txt7"><span></span></p>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pmatch_notice">
+                <div class="pmatch_tit2">
+                    <h2>한&middot;중 타임매치 진행 방식 및 규정안내</h2>
+                </div>
+                <div class="pmatch_noticebox sc1">
+                    <p class="pmatch_txt8">1. 참가대상 : 한국 / 중국 프로기사 전체</p>
+                    <p class="pmatch_txt8">
+                        2. 사전예약<br />
+                            신청예약은 주간 단위로 예약 신청이 가능하며,<br /> 
+                            익일 대국에 대해서 하루 전날 16시까지<br />
+                            사전예약페이지를 통해 예약 할 수 있습니다.
+                    </p>
+                    <p class="pmatch_txt8">3. 예약완료 후 취소는 16시 마감전까지 취소할 수 있습니다.</p>
+                    <p class="pmatch_txt8">4. 대진표 발표 : 매일 18시 익일 진행 될 타임매치 대국 대진표 발표</p>
+                    <p class="pmatch_txt8">
+                        5. 진행시간<br />
+                           [총 4개 타임 진행]<br />
+                              11:00 (준결승) - 13:00 (결승)<br />
+                              15:00 (준결승) – 16:00 (결승)<br /> 
+                              17:00 (준결승) – 18:00 (결승)<br />
+                              21:00 (준결승) – 22:00 (결승)
+                    </p>
+                    <p class="pmatch_txt8">
+                        6. 진행방식<br />
+                           매일 4개 타임별 최대 4강전 2개조 진행<br />
+                            대국시간에 맞춰 대회서버 대국방에 입실하여 대국 진행<br />
+                            준결승 승자끼리는 결승까지 이어서 바로 진행(연기불가)<br />
+                            대결은 한VS중, 한VS한 으로 진행 될 수 있음
+                    </p>
+                    <p class="pmatch_txt8">
+                        7. 유의사항<br />
+                           예약 된 날짜/시간에 참석을 하지 못하는 경우 패널티가 주어지며,<br />
+                             다음 신청에서 제외 및 불이익이 발생할 수 있습니다.<br />
+                            (최대한 스케줄 고려해서 신청 부탁드립니다.)<br />
+                            신청자가 많은 경우 매치에서 제외 될 수 있으며,<br />
+                            신청자가 없는 경우 매치가 취소 될 수 있습니다.<br />
+                            진행상황에 따라 타임매치 이벤트는 조기 종료 될 수 있습니다.<br />
+                            인공지능 치팅 시 참가자격 박탈 및 영구정지 제재 될 수 있습니다.
+                    </p>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div> 
+    </div>
+    <div id="pmatch_copywrap">
+        <div class="pmatch_copy">
+            <p>COPYRIGHT&copy; Com2uS TYGEM Ｃorporation ALL RIGHTS RESERVED.</p>
+        </div>    
+    </div>
+<?
+$time = mktime(0,0,0,date("m"),date("d"),date("Y"));
+
+	$t = date("w");
+	$tt = (6+$t)%7;
+
+	$t = $time-(($tt)*60*60*24);
+?>
+<form name="thisform" method="post" action="reserve_process.html" target="hiddenFrame">
+<input type="hidden" name="std_date" id="std_date">
+<input type="hidden" name="set_date" id="set_date">
+<input type="hidden" name="std_date2" id="std_date2">
+<input type="hidden" name="set_date2" id="set_date2">
+<input type="hidden" name="set_time" id="set_time">
+</form>
+<iframe name="hiddenFrame" title="hiddenFrame" style="display:none"></iframe>
+<script>
+	function reserve_list(){
+		$.post("reserve.html", { }, function(data){
+			$("#pmatch_reserve").html(data);
+		});
+	}
+	function select_timelist(thisvalue){
+		var std_date = thisvalue;
+		var set_date = thisvalue;
+		$("#std_date").val(std_date);
+		$("#set_date").val(set_date);
+		$.post("reserve.html", {"std_date":std_date, "set_date":set_date }, function(data){
+			$("#pmatch_reserve").html(data);
+		});
+	}
+	function click_timedate(thisvalue){
+		var std_date = $("#std_date").val();
+		var set_date = thisvalue;
+		$("#set_date").val(thisvalue);
+		$.post("reserve.html", {"std_date":std_date, "set_date":set_date }, function(data){
+
+			$("#pmatch_reserve").html(data);
+		});
+
+	}
+
+	function match_list(){
+		$.post("match.html", { }, function(data){
+			$("#pmatch_match").html(data);
+		});
+	}
+	function select_matchlist(thisvalue){
+		var std_date = thisvalue;
+		var set_date = thisvalue;
+		$("#std_date2").val(std_date);
+		$("#set_date2").val(set_date);
+		$.post("match.html", {"std_date":std_date, "set_date":set_date }, function(data){
+			$("#pmatch_match").html(data);
+		});
+	}
+	function click_matchdate(thisvalue, stime){
+		var std_date = $("#std_date2").val();
+		var set_date = thisvalue;
+		$("#set_date2").val(thisvalue);
+		$.post("match.html", {"std_date":std_date, "set_date":set_date, "set_time":stime }, function(data){
+
+			$("#pmatch_match").html(data);
+		});
+
+	}
+	function reserve_cancel(seq, sdate){
+		if(confirm("해당 사전예약을 취소하시겠습니까?")){
+			$.post("reserve_cancel.html", {"seq" : seq, "set_date":sdate }, function(data){
+				if(data == "time"){
+					alert("예약완료 후 취소는 16시 마감전까지 취소할 수 있습니다.");
+					return;
+				}
+				click_timedate(sdate);
+			});
+		}
+	}
+
+	function timematch_reserve(stime){
+<? if($s_uid == ""){?>
+	document.location.href = "https://www.tygem.com/login.php?gotourl=" + document.location.href;
+     return;
+<?}?>
+		var set_date = $("#set_date").val();
+		
+		var a = new Date(set_date * 1000);
+		var months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+		var month = months[a.getMonth()];
+		var date = a.getDate();
+		var set_times = ['00:00','11:00','15:00','17:00','21:00'];
+
+		$.post("reserve_process.html", {"set_date":set_date, "set_time":stime }, function(data){
+			if(data == "registration"){
+				alert("이미 등록되어있습니다.");
+			}else if(data == "full"){
+				alert("신청할수 없습니다.");
+			}else if(data == "ok"){
+				alert(month + " " + date + "일 " + set_times[stime] + "에 신청이 완료되었습니다.\n감사합니다.");
+			}else if(data == "no"){
+				alert("참가신청 할 수 없는 아이디입니다.");
+			}else if(data == "korfull"){
+				alert("나라별 최대 6명까지 가능합니다.");
+			}else if(data == "chnfull"){
+				alert("나라별 최대 6명까지 가능합니다.");
+			}
+			click_timedate(set_date);
+		});
+	}
+
+	reserve_list();
+	match_list();
+</script>
+<div id="div_area"></div>
+</body> 
+    
+</html>

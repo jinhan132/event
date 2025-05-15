@@ -1,0 +1,242 @@
+<?
+header("Content-Type:text/html;charset=utf-8"); 
+
+include_once "/home/www/inc/define.h";
+include_once "$docPath/inc/session.inc";
+
+$rank_view = array("1단","2단","3단","4단","5단","6단","7단","8단","9단");
+
+
+$eventnum = "timematch_table";
+
+$yoil = array("일","월","화","수","목","금","토");
+$eyoil = array("SUN","MON","TUE","WED","THU","FRI","SAT");
+
+$view_time = array("00:00","11:00","15:00","17:00","21:00");
+
+	$std_date = $_POST["std_date"];
+	$set_date = $_POST["set_date"];
+
+	if(!$set_time){
+		$ori_set_time = "none";
+		$set_time = 1;
+	}
+
+include "/home/www/inc/db_connect_11.inc";
+mysql_query("set names 'utf8'");
+
+function getWeek($date){
+    $DEFAULT_DAYS = 1; //1 ~ 7 (월 ~ 일)
+    list($yy, $mm, $dd) = explode('-', $date);
+    $first_day = date('N', mktime(0,0,0,$mm, 1, $yy));
+
+    if($first_day <= $DEFAULT_DAYS){  
+        $remain_days = $DEFAULT_DAYS - $first_day;
+        $next_monday = $remain_days +1;
+    }else{
+        $remain_days= 7 - $first_day;
+        $next_monday = $remain_days + $DEFAULT_DAYS +1;
+	}
+
+    if($dd < $next_monday){
+        $new_date = date('Y-M-d', mktime(0,0,0,$mm,0,$yy));
+        return getWeek($new_date);
+    }else{
+        $week = ceil(($dd-($next_monday -1))/7);
+        return $week;
+    }
+}
+
+	$time = mktime(0,0,0,date("m"),date("d"),date("Y"));
+
+	$t = date("w");
+	$tt = (6+$t)%7;
+?>
+				<div class="pmatch_tit1">
+                    <h2>대진표</h2>
+                    <div class="pmatch_weekbox">
+                        <select class="pmatch_weekselect" id="pmatch_weekselect" onchange="javascript:select_matchlist(this.value)">
+<?
+for($i=0; $i<4; $i++){
+	$t = $time-(($tt)*60*60*24) + ((60*60*24*7)*$i);
+	$event_now_date = date("Y-m-d",$t);
+
+if($i ==0){
+	$thisdate = $t;
+}
+?>
+							<option value="<?=$t?>" <? if($t == $std_date){echo "selected";}?>><?=date("Y", $t)?>년 <?= intval(date("m", $t))?>월 <?=getWeek($event_now_date)?>주차</option>
+<?}?>
+                        </select>
+                    </div>
+                    <div class="clear"></div>
+<?
+if(!$set_date && !$std_date){
+	$set_date = $time;
+?>
+<script>
+$("#std_date2").val("<?=$thisdate?>");
+$("#set_date2").val("<?=$time?>");
+</script>
+<?}?>
+                </div>
+                <div class="pmatch_weeklybox">
+<?
+
+
+if($std_date > 0){
+	$this_time = $std_date;
+}else{
+	$this_time = $thisdate;
+}
+
+for($i=0; $i<7; $i++){
+
+	$t = $this_time + ((60*60*24)*$i);
+	$event_now_date = date("d",$t);
+?>                    
+					<button type="button" onclick="javascript:click_matchdate('<?=$t?>')" <? if($t == $set_date){ ?>class="pmatch_day2"<?}else{?>class="pmatch_dayoff"<?}?>>
+                        <p class="pmatch_txt1"><span><?=$eyoil[date('w', $t)]?></span><br /><?= intval($event_now_date)?></p>
+                    </button>
+<?}?>
+
+                </div>
+<?
+if($ori_set_time == "none"){
+	$sql_order = "select * from tygem_eventlist where eventnum = '$eventnum' and user_num=$set_date and data8='Y' order by info limit 1";
+	$query_order = mysql_query($sql_order, $connect);
+	$data_order = mysql_fetch_array($query_order);
+
+
+	if($data_order["info"] > 0){
+		$set_time = $data_order["info"];
+	}
+}
+?>
+
+
+                <div class="pmatch_daytimebox">
+<? for($i=1; $i<=4; $i++){?>
+					<button type="button" onclick="javascript:click_matchdate($('#set_date2').val(),<?=$i?>)" <? if($set_time == $i){?>class="pmatch_daytime"<?}else{?>class="pmatch_daytimeoff"<?}?>>
+                        <p class="pmatch_circle"></p><p class="pmatch_txt4"><?=$view_time[$i]?></p>
+                    </button>
+<?}?>                    
+
+                </div>
+
+<?
+//$set_date = date("Ymd",$set_date);
+
+for($i=1; $i<=2; $i++){
+	$sql = "select * from tygem_eventlist where eventnum = '$eventnum' and user_num=$set_date and info='$set_time' and num1=$i";
+	$query = mysql_query($sql, $connect);
+	$data = mysql_fetch_array($query);
+
+	$data8[$i] = $data["data8"];
+	if($data8[$i] == "Y"){
+		$data1[$i] = $data["data1"];
+		$data2[$i] = $data["data2"];
+		$data3[$i] = $data["data3"];
+		$data4[$i] = $data["data4"];
+		$data5[$i] = $data["data5"];
+		$data6[$i] = $data["data6"];
+		$data7[$i] = $data["data7"];
+	
+		$data1_var = explode(" ",$data1[$i]);
+		$data2_var = explode(" ",$data2[$i]);
+		$data3_var = explode(" ",$data3[$i]);
+		$data4_var = explode(" ",$data4[$i]);
+		$data5_var = explode(" ",$data5[$i]);
+		$data6_var = explode(" ",$data6[$i]);
+		$data7_var = explode(" ",$data7[$i]);
+
+		if( count($data1_var) > 1){
+			$data1[$i] = $data1_var[0]."<span>".$data1_var[1]."</span>";
+		}
+		if( count($data2_var) > 1){
+			$data2[$i] = $data2_var[0]."<span>".$data2_var[1]."</span>";
+		}
+		if( count($data3_var) > 1){
+			$data3[$i] = $data3_var[0]."<span>".$data3_var[1]."</span>";
+		}
+		if( count($data4_var) > 1){
+			$data4[$i] = $data4_var[0]."<span>".$data4_var[1]."</span>";
+		}
+		if( count($data5_var) > 1){
+			$data5[$i] = $data5_var[0]."<span>".$data5_var[1]."</span>";
+		}
+		if( count($data6_var) > 1){
+			$data6[$i] = $data6_var[0]."<span>".$data6_var[1]."</span>";
+		}
+		if( count($data7_var) > 1){
+			$data7[$i] = $data7_var[0]."<span>".$data7_var[1]."</span>";
+		}
+	
+	}
+	
+
+
+}
+?>
+
+                <div class="pmatch_matchtablebox">
+<? if($data8[1] == "" && $data8[2] == ""){?>                    
+					<div class="pmatch_matchoff">
+                        <p class="pmatch_txt5">대진표 준비중 입니다.</p>
+                    </div>
+<?}else if($data8[1] == "Y" && $data8[2] == ""){?>
+					<div class="pmatch_matchoff2">
+                        <p class="pmatch_txt52">대진표 준비중 입니다.</p>
+                    </div>
+<?}?>
+                    <div class="pmatch_matchbox" >
+                        <p class="pmatch_txt6">1조 대진표</p>
+                        <div class="pmatch_matchtable">
+                            <div class="pmatch_semiarea">
+                                <div class="pmatch_semi">
+                                    <p class="pmatch_txt9"><?=$data4[1]?></p>
+                                    <p class="pmatch_txt9"><?=$data5[1]?></p>
+                                </div>                                
+                                <div class="pmatch_semi">
+                                    <p class="pmatch_txt9"><?=$data6[1]?></p>
+                                    <p class="pmatch_txt9"><?=$data7[1]?></p>
+                                </div>                                
+                            </div>
+                            <div class="pmatch_finalarea">
+                                <div class="pmatch_final">
+                                    <p class="pmatch_txt9"><?=$data2[1]?></p>
+                                    <p class="pmatch_txt9"><?=$data3[1]?></p>
+                                </div>              
+                            </div>
+                            <div class="pmatch_winner">
+                                <p class="pmatch_txt7"><?=$data1[1]?></p>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                    <div class="pmatch_matchbox">
+                        <p class="pmatch_txt6">2조 대진표</p>
+                        <div class="pmatch_matchtable">
+                            <div class="pmatch_semiarea">
+                                <div class="pmatch_semi">
+                                    <p class="pmatch_txt9"><?=$data4[2]?></p>
+                                    <p class="pmatch_txt9"><?=$data5[2]?></p>
+                                </div>                                
+                                <div class="pmatch_semi">
+                                    <p class="pmatch_txt9"><?=$data6[2]?></p>
+                                    <p class="pmatch_txt9"><?=$data7[2]?></p>
+                                </div>                                
+                            </div>
+                            <div class="pmatch_finalarea">
+                                <div class="pmatch_final">
+                                    <p class="pmatch_txt9"><?=$data2[2]?></p>
+                                    <p class="pmatch_txt9"><?=$data3[2]?></p>
+                                </div>              
+                            </div>
+                            <div class="pmatch_winner">
+                                <p class="pmatch_txt7"><?=$data1[2]?></p>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>

@@ -1,0 +1,245 @@
+<?
+header("Content-Type:text/html;charset=utf-8"); 
+
+include_once "/home/www/inc/define.h";
+include_once "$docPath/inc/session.inc";
+
+
+	 if( mb_substr(iconv("euc-kr","utf-8",$s_uid), 0 , 3, 'utf-8') != "운영자" ){
+		exit;
+	}
+
+
+	function userDir2($unum, $ccode) {
+		$incnum = 1000;
+		if($ccode == 2){
+			$user_info_path = "http://images.eweiqi.com/wuser/";
+		}else{
+			$user_info_path = "http://service.tygem.com/wuser/";
+		}
+		// depth1 디렉토리
+		$dir1 = $user_info_path . (int)( ($unum/$incnum) / $incnum ) . "/";
+
+		// depth2 디렉토리
+		$dir2 = $dir1 . (int)( ($unum/$incnum) % $incnum ) . "/";
+
+		// depth3 디렉토리
+		$dir3 = $dir2 . (int)( $unum%$incnum );
+
+		return $dir3;
+	}
+
+$rank_view = array("1단","2단","3단","4단","5단","6단","7단","8단","9단");
+
+
+$gubun = "timematch";
+
+$yoil = array("일","월","화","수","목","금","토");
+$view_time = array("00:00","11:00","15:00","18:00","21:00");
+
+	$std_date = $_POST["std_date"];
+	$set_date = $_POST["set_date"];
+
+
+
+include "/home/www/inc/db_connect_11.inc";
+mysql_query("set names 'utf8'");
+
+function getWeek($date){
+    $DEFAULT_DAYS = 1; //1 ~ 7 (월 ~ 일)
+    list($yy, $mm, $dd) = explode('-', $date);
+    $first_day = date('N', mktime(0,0,0,$mm, 1, $yy));
+
+    if($first_day <= $DEFAULT_DAYS){  
+        $remain_days = $DEFAULT_DAYS - $first_day;
+        $next_monday = $remain_days +1;
+    }else{
+        $remain_days= 7 - $first_day;
+        $next_monday = $remain_days + $DEFAULT_DAYS +1;
+	}
+
+    if($dd < $next_monday){
+        $new_date = date('Y-M-d', mktime(0,0,0,$mm,0,$yy));
+        return getWeek($new_date);
+    }else{
+        $week = ceil(($dd-($next_monday -1))/7);
+        return $week;
+    }
+}
+
+	$time = mktime(0,0,0,date("m"),date("d"),date("Y"));
+
+	$t = date("w");
+	$tt = (6+$t)%7;
+
+
+	
+
+?>
+<style>
+td{font-family:'굴림',Gulim,Helvetica,sans-serif;font-size:13px;color:#000}
+</style>
+<script type="text/javascript" src="/js/jquery-lastest.js"></script>
+<script src="/js/jquery.countdown.min.js"></script>
+<script>
+	function set_date(val){
+		document.thisform.std_date.value = val;
+		document.thisform.set_date.value = val;
+		document.thisform.submit();
+	}
+
+	function click_date(val){
+		document.thisform.set_date.value = val;
+		document.thisform.submit();
+	}
+
+	function check_id(step){
+		var userId = $("#user_id"+step).val();
+		var set_date = $("#set_date").val();
+		$.post("add_id.php", {"set_date" : set_date, "userid" : decodeURIComponent(userId), "set_time":step }, function(data){
+			$("#view_txt").html(data);
+		});
+	}
+
+	function check_num(step){
+		var usernum = $("#user_num"+step).val();
+		var set_date = $("#set_date").val();
+		$.post("add_usernum.php", {"set_date" : set_date, "usernum" : usernum, "set_time":step }, function(data){
+			$("#view_txt").html(data);
+		});
+	}
+
+	function del_join(seq, userid){
+		if(confirm(userid+" 삭제하시겠습니까?")){
+			$.post("del_id.php", {"seq" : seq }, function(data){
+			$("#view_txt").html(data);
+		});
+		}
+	}
+</script>
+
+
+
+<input type="button" value="예약신청" style="width:100px;height:40px;color:blue;" onclick="javascript:location.href='admin.html'">
+<input type="button" value="대진표" style="width:100px;height:40px;" onclick="javascript:location.href='admin_table.html'">
+<input type="button" value="인명사전" style="width:100px;height:40px;" onclick="javascript:window.open('http://file.tygem.com/client/dicpeople/dicpeople.xml','','')">
+<br>
+
+<form name="thisform" method="post" action="<?=$PHP_SELF?>">
+<input type="hidden" name="std_date" value="<?=$std_date?>">
+<input type="hidden" name="set_date" id="set_date" value="<?=$set_date?>">
+</form>
+<select onchange="javascript:set_date(this.value)" style="height:30px;">
+<?
+for($i=0; $i<4; $i++){
+	$t = $time-(($tt)*60*60*24) + ((60*60*24*7)*$i);
+	$event_now_date = date("Y-m-d",$t);
+
+if($i ==0){
+	$thisdate = $t;
+}
+?>
+<option value="<?=$t?>" <? if($t == $std_date){echo "selected";}?>> <?=date("m", $t)?>월 <?=getWeek($event_now_date)?>주차 | <?=$event_now_date?>
+<?
+}
+?>
+</select>
+<br><br>
+
+<?
+
+if(!$set_date && !$std_date){
+	$set_date = $time;
+?><script>document.thisform.std_date.value = "<?=$thisdate?>";document.thisform.set_date.value = "<?=$time?>";$("#set_btn0").css("color","blue")</script><?
+}
+
+
+
+if(!$std_date && !$set_date){
+	$std_date = $thisdate;
+	$set_date	= $thisdate;
+}
+
+
+if($std_date > 0){
+	$this_time = $std_date;
+}else{
+	$this_time = $thisdate;
+}
+
+for($i=0; $i<7; $i++){
+
+	$t = $this_time + ((60*60*24)*$i);
+	$event_now_date = date("m/d",$t);
+
+?><input type="button" id="set_btn<?=$i?>" value="<?=$event_now_date?>(<?=$yoil[date('w', $t)]?>)" style="width:100px;height:40px;cursor:pointer;<? if($set_date == $t){echo 'color:blue;';} ?>" onclick="javascript:click_date('<?=$t?>')"> <?
+}
+echo "<span id='clock'>남은시간</span>";
+
+
+
+?>
+
+<? for($i=1; $i<=4; $i++){?>
+<br><br><input type="button" value="<?=$view_time[$i]?>" style="color:red; width:80px;height:22px;"> <input type="text" id="user_id<?=$i?>" placeholder="홍길동" style="width:100px;"><input type="button" value="+추가" onclick="javascript:check_id(<?=$i?>)">
+&nbsp;<input type="text" id="user_num<?=$i?>" placeholder="12345" style="width:100px;"><input type="button" value="+추가" onclick="javascript:check_num(<?=$i?>)">
+<br>
+
+<table>
+	<tr>
+<?
+	//$sql = "select * from event_data where gubun='$gubun' and kind='$set_date' and mvalue1=$i";
+
+	$sql = "select * from tygem_eventlist_utf8 where eventnum='$gubun' and num1=$set_date and info='$i'";
+	$query = mysql_query($sql, $connect);
+	while($data = mysql_fetch_array($query)){
+		$seq = $data["seq"];
+		$user_num = $data["user_num"];
+		$data3 = $data["data3"];
+		$data4 = $data["data4"];
+		
+		$data2 = $data["data2"];
+		$country_code = $data2;
+
+		$user_id = $data["user_id"];
+
+		$ava_exp	= explode(".", $data4);
+			if(strlen($ava_exp[0]) < 7){
+				if($ava_exp[0] == "Mouse" || $ava_exp[0] == "Cow" || $ava_exp[0] == "Tiger" || $ava_exp[0] == "Rabbit" || $ava_exp[0] == "Dragon" || $ava_exp[0] == "Snake" || $ava_exp[0] == "Horse" || $ava_exp[0] == "Sheep" || $ava_exp[0] == "Monkey" || $ava_exp[0] == "Rooster" || $ava_exp[0] == "Dog" || $ava_exp[0] == "Pig" ){
+					$ava_path = "//service.tygem.com/member/img/".$data4;
+				}else{
+					$ava_path = "//service.tygem.com/avataimg/".$data4;
+				}
+			
+			}else{
+				$u_udir	= userDir2($user_num,$country_code);
+				$ava_path	= "$u_udir/photo/thumbs/$data4";
+			}
+?>
+		<td width="130"><?=$user_id?> <?=$rank_view[$data3-27]?>(<?=$data["data1"]?>)<br><img src='<?=$ava_path?>' width='118' height='89' style="cursor:pointer;" onclick="javascript:del_join(<?=$seq?>,'<?=$user_id?>')"></td>
+<?		
+		
+		//echo $data["user_id"]."(".$data["data1"].") <br><img src='$ava_path' width='118' height='89' >";
+	}
+?>
+	</tr>
+</table>
+<?}?>
+
+<div id="view_txt"></div>
+
+<?
+
+	if(time() < ($set_date + (60*60*16) )) {
+		$countdown = date("Y-m-d H:i:s", $set_date + (60*60*16));
+?>
+<script>
+$('#clock').countdown('<?=$countdown?>', function(event) {
+  $(this).html(event.strftime("<font color='red'>%D일 %H:%M:%S</font>"));
+});
+</script>
+<?
+	}
+
+
+?>
