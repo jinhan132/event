@@ -1,0 +1,44 @@
+
+
+<style>
+body{margin:10;padding:10}
+input, select {height:30px;}
+td{font-family:'굴림',Gulim,Helvetica,sans-serif;font-size:13px;color:#000}
+</style>
+<script type="text/javascript" src="/js/jquery-lastest.js"></script>
+<script>
+
+	function quiz_list(){
+		$.post("log01.html", {}, function(data){
+			$("#event_area").html(data);
+		});
+	}
+
+	function key_history(){
+		$.post("log02.html", {}, function(data){
+			$("#event_area").html(data);
+		});
+	}
+
+	function quiz_user(){
+		$.post("log03.html", {}, function(data){
+			$("#event_area").html(data);
+		});
+	}
+
+	function basic_quiz(){
+		$.post("log04.html", {}, function(data){
+			$("#event_area").html(data);
+		});
+	}
+
+</script>
+
+<input type="button" value="quiz_list" style="width:100px;height:40px;" onclick="javascript:quiz_list()">
+<input type="button" value="key_history" style="width:100px;height:40px;" onclick="javascript:key_history()">
+<input type="button" value="quiz_user" style="width:100px;height:40px;;" onclick="javascript:quiz_user()">
+
+<input type="button" value="user_basic/quiz_user" style="width:100px;height:40px;;" onclick="javascript:basic_quiz()">
+
+<br><br>
+<div id="event_area"></div>

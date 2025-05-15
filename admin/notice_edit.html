@@ -1,0 +1,14 @@
+<?
+	$ukey = $_POST["ukey"];
+
+	include "../inc/db_con.inc";
+
+	$sql = "select * from notice where ukey=$ukey";
+	$query = mysql_query($sql, $con);
+	$data = mysql_fetch_array($query);
+	$msg = $data["msg"];
+
+?>
+
+<div><textarea class="form-control" aria-label="With textarea" cols="46" id="editor<?=$ukey?>" name="content" rows="5"><?=$msg?></textarea></div>
+<div><button type="button" class="btn btn-warning" onclick="javascript:notice_edit_proc(<?=$ukey?>)">내용수정</button></div>

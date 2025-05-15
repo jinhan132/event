@@ -1,0 +1,192 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+?>
+
+
+<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+<input type="text" id="user_txt" placeholder="nick" onkeyup="all_user()">
+<input type="hidden" id="user_info" value="<?=$_POST['post_user_info']?>"></div>&nbsp;<input type="checkbox" class="form-check-input" id="all_check">전체선택
+&nbsp;&nbsp;
+&nbsp;<input type="checkbox" class="form-check" name="ncode_check" id="kr_check" value="0">한국
+&nbsp;<input type="checkbox" class="form-check" name="ncode_check" id="jp_check" value="1">일본
+&nbsp;<input type="checkbox" class="form-check" name="ncode_check" id="cn_check" value="2">중국
+&nbsp;<input type="checkbox" class="form-check" name="ncode_check" id="tw_check" value="4">대만
+&nbsp;<input type="checkbox" class="form-check" name="ncode_check" id="en_check" value="3">영어
+<script>
+
+
+	$("#all_check").click(function(){
+
+		if($("#all_check").is(":checked")){
+			$("input[name='uid[]']").prop("checked", true);
+		}else{
+			$("input[name='uid[]']").prop("checked", false);
+		}
+
+		var checkboxArr = [];
+		$("input[name='uid[]']:checked").each(function(i){
+			checkboxArr.push($(this).val());
+		});
+		console.log(checkboxArr);
+		$("#user_info").val(checkboxArr);
+		parent.$("#post_id_div").val(checkboxArr);
+
+	});
+
+
+	$(".form-check").on("change", function(){
+		
+		var checkboxArr = [];
+		$("input[name='ncode_check']:checked").each(function(i){
+			checkboxArr.push($(this).val());
+		});
+		
+
+		$.post("post_user_n.php", { "ncode_arr":checkboxArr}, function(data){
+
+			$("#user_area").html(data);
+
+			var checkboxArr2 = [];
+			$("input[name='uid[]']:checked").each(function(i){
+			checkboxArr2.push($(this).val());
+			});
+			console.log(checkboxArr2);
+			parent.$("#post_id_div").val(checkboxArr2);
+
+
+
+		});
+
+	});
+/*
+	$("#kr_check").click(function(){
+		
+		var user_txt = $("#user_txt").val();
+		var user_info = $("#user_info").val();
+
+		var ncode;
+		if($("#kr_check").is(":checked")){
+			ncode = 0;
+		}else{
+			ncode = null;
+		}
+		$.post("post_user.php", { "ncode":ncode, "";}, function(data){
+			$("#user_area").html(data);
+
+		var checkboxArr = [];
+		$("input[name='uid[]']:checked").each(function(i){
+			checkboxArr.push($(this).val());
+		});
+		console.log(checkboxArr);
+		$("#user_info").val(checkboxArr);
+		parent.$("#post_id_div").val(checkboxArr);
+
+		});
+	});
+
+	$("#jp_check").click(function(){
+		var user_txt = $("#user_txt").val();
+		var user_info = $("#user_info").val();
+		var ncode;
+		if($("#jp_check").is(":checked")){
+			ncode = 1;
+		}else{
+			ncode = null;
+		}
+		$.post("post_user.php", {"ncode":ncode}, function(data){
+			$("#user_area").html(data);
+		var checkboxArr = [];
+		$("input[name='uid[]']:checked").each(function(i){
+			checkboxArr.push($(this).val());
+		});
+		console.log(checkboxArr);
+		$("#user_info").val(checkboxArr);
+		parent.$("#post_id_div").val(checkboxArr);
+		});
+	});
+	$("#cn_check").click(function(){
+		var user_txt = $("#user_txt").val();
+		var user_info = $("#user_info").val();
+		var ncode;
+		if($("#cn_check").is(":checked")){
+			ncode = 2;
+		}else{
+			ncode = null;
+		}
+		$.post("post_user.php", {"ncode":ncode}, function(data){
+			$("#user_area").html(data);
+		var checkboxArr = [];
+		$("input[name='uid[]']:checked").each(function(i){
+			checkboxArr.push($(this).val());
+		});
+		console.log(checkboxArr);
+		$("#user_info").val(checkboxArr);
+		parent.$("#post_id_div").val(checkboxArr);
+		});
+	});
+	$("#tw_check").click(function(){
+		var user_txt = $("#user_txt").val();
+		var user_info = $("#user_info").val();
+		var ncode;
+		if($("#tw_check").is(":checked")){
+			ncode = 4;
+		}else{
+			ncode = null;
+		}
+		$.post("post_user.php", {"ncode":ncode}, function(data){
+			$("#user_area").html(data);
+		var checkboxArr = [];
+		$("input[name='uid[]']:checked").each(function(i){
+			checkboxArr.push($(this).val());
+		});
+		console.log(checkboxArr);
+		$("#user_info").val(checkboxArr);
+		parent.$("#post_id_div").val(checkboxArr);
+		});
+	});
+	$("#en_check").click(function(){
+		var user_txt = $("#user_txt").val();
+		var user_info = $("#user_info").val();
+		var ncode;
+		if($("#en_check").is(":checked")){
+			ncode = 3;
+		}else{
+			ncode = null;
+		}
+		$.post("post_user.php", {"ncode":ncode}, function(data){
+			$("#user_area").html(data);
+		var checkboxArr = [];
+		$("input[name='uid[]']:checked").each(function(i){
+			checkboxArr.push($(this).val());
+		});
+		console.log(checkboxArr);
+		$("#user_info").val(checkboxArr);
+		parent.$("#post_id_div").val(checkboxArr);
+		});
+	});
+*/
+	function checkbox_in(){
+		var checkboxArr = [];
+		$("input[name='uid[]']:checked").each(function(i){
+			checkboxArr.push($(this).val());
+		});
+		console.log(checkboxArr);
+		$("#user_info").val(checkboxArr);
+		parent.$("#post_id_div").val(checkboxArr);
+	}
+	
+	
+	function all_user(){
+		var user_txt = $("#user_txt").val();
+		var user_info = $("#user_info").val();
+
+		$.post("post_user.php", {"user_txt":user_txt, "user_info":user_info}, function(data){
+			
+			$("#user_area").html(data);
+		});
+	}
+
+	all_user();
+</script>
+
+<div id="user_area"></div>

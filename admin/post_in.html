@@ -1,0 +1,59 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+
+?>
+<form name="submit_form" method="post" action="post_process.php" target="hiddenFrame">
+<table class="table">
+	<tr>
+		<th scope="row">유효기간</th>
+		<td>
+			<div class="input-group mb-1" style="width:400px;">
+			<input type="text" class="form-control" onclick="Calendar(this);" name="i_expire" style="width:180px;" required>
+			<select name="i_expire_hour" class="form-select">
+<? for($i=0; $i<=23; $i++){
+	if(strlen($i)==1){
+		$view_h = "0".$i;
+	}else{
+		$view_h = $i;
+	}
+?>
+				<option value="<?=$view_h?>"><?=$view_h?>시
+<?}?>
+			</select>
+			<select name="i_expire_min" class="form-select">
+<? for($i=0;$i<=5;$i++){?>
+				<option value="<?=$i?>0"><?=$i?>0분
+<?}?>
+			</select>
+			</div>
+		</td>
+	</tr>
+	
+	<tr>
+		<th scope="row">내용</th>
+		<td>
+			<div class="input-group mb-1"><textarea class="form-control" name="form_msg" style="height:100px;" required></textarea></div>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">받는 사람</th>
+		<td>
+			<div class="input-group mb-1"><input type="text" name="user_uid" class="form-control" id="post_id_div" onclick="javascript:post_user()" required></div>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">지급 열쇠 개수</th>
+		<td>
+			<div class="input-group mb-1" style="width:90px" ><input type="number" name="i_cnt" max='9999' maxlength='4' oninput='maxLengthCheck(this);' class="form-control" id="title" required min="1"></div>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">지급 사유</th>
+		<td>
+			<div class="input-group mb-1"><input type="text" name="info" class="form-control" id="title" required></div>
+		</td>
+	</tr>
+
+</table>
+<div class="col-12"><button class="btn btn-primary" type="submit">Submit</button>&nbsp;<button class="btn btn-secondary" type="button" onclick="javascript:post_list()"> 취 소 </button></div>
+</form>

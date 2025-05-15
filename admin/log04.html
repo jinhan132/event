@@ -1,0 +1,35 @@
+<?
+	include "../inc/db_con.inc";
+
+	$sql = "select user_basic.uid, user_basic.nick, quiz_user.grade, user_basic.reg_time, quiz_user.last_time, quiz_user.do_cnt, quiz_user.try_cnt  from user_basic, quiz_user where user_basic.uid=quiz_user.uid ";
+	$query = mysql_query($sql, $con);
+?><!--uid   유저nick   기력   가입일   최종로그인   열쇠   풀이문제수-->
+<table border="0" cellpadding="1" cellspacing="1" height="100%" bgcolor="dddddd">
+	<tr align="center" height="24" bgcolor="f1f1f1">
+		<td width="60">uid</td>
+		<td width="180">nick</td>
+		<td width="40">grade</td>
+		<td width="140">reg_time</td>
+		<td width="140">last_time</td>
+		<td width="50">do_cnt</td>
+		<td width="50">try_cnt</td>
+
+	</tr>
+<?
+	while($data = mysql_fetch_array($query)){
+?>
+	<tr align="center" bgcolor="ffffff">
+		<td><?=$data[0]?></td>
+		<td><?=$data[1]?></td>
+		<td><?=$data[2]?></td>
+		<td><?=$data[3]?></td>
+		<td><?=$data[4]?></td>
+		<td><?=$data[5]?></td>
+		<td><?=$data[6]?></td>
+	</tr>
+<?
+	}
+
+	mysql_close($con);
+?>
+</table>

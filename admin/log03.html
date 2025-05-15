@@ -1,0 +1,25 @@
+<?
+	include "../inc/db_con.inc";
+
+	$sql = "select grade, count(*) as cnt from quiz_user group by grade order by 1";
+	$query = mysql_query($sql, $con);
+?>
+<table border="0" cellpadding="0" cellspacing="0" height="100%">
+	<tr align="center" height="24">
+		<td width="100">grade</td>
+		<td width="30">count</td>
+	</tr>
+<?
+	while($data = mysql_fetch_array($query)){
+?>
+	<tr align="center">
+		<td><?=$data["grade"]?></td>
+		<td><?=$data["cnt"]?></td>
+
+	</tr>
+<?
+	}
+
+	mysql_close($con);
+?>
+</table>

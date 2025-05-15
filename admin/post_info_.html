@@ -1,0 +1,291 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+include "cookies.php";
+
+if(!$s_uid){
+?><script>location.href="https://www.tygem.com/login.php?gotourl=https://service.tygem.com/deadlive/admin/";</script><?
+	exit;
+}
+
+if(mb_substr($s_uid,0,3,'euc-kr') == "운영자"){
+}else{
+	echo "ADMIN AREA";
+//	exit;
+}
+?>
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
+<link href="./bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+
+<style>
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+html {
+  height: -webkit-fill-available;
+}
+
+main {
+  height: 100vh;
+  height: -webkit-fill-available;
+  max-height: 100vh;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.dropdown-toggle { outline: 0; }
+
+.btn-toggle {
+  padding: .25rem .5rem;
+  font-weight: 600;
+  color: var(--bs-emphasis-color);
+  background-color: transparent;
+}
+.btn-toggle:hover,
+.btn-toggle:focus {
+  color: rgba(var(--bs-emphasis-color-rgb), .85);
+  background-color: var(--bs-tertiary-bg);
+}
+
+.btn-toggle::before {
+  width: 1.25em;
+  line-height: 0;
+  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+  transition: transform .35s ease;
+  transform-origin: .5em 50%;
+}
+
+[data-bs-theme="dark"] .btn-toggle::before {
+  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%28255,255,255,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+}
+
+.btn-toggle[aria-expanded="true"] {
+  color: rgba(var(--bs-emphasis-color-rgb), .85);
+}
+.btn-toggle[aria-expanded="true"]::before {
+  transform: rotate(90deg);
+}
+
+.btn-toggle-nav a {
+  padding: .1875rem .5rem;
+  margin-top: .125rem;
+  margin-left: 1.25rem;
+}
+.btn-toggle-nav a:hover,
+.btn-toggle-nav a:focus {
+  background-color: var(--bs-tertiary-bg);
+}
+
+.scrollarea {
+  overflow-y: auto;
+}
+
+ .b-example-divider {
+        width: 100%;
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+  .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+
+
+.form-select {
+    --bs-form-select-bg-img: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e);
+    display: block;
+    width: 100%;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    background-image: var(--bs-form-select-bg-img),var(--bs-form-select-bg-icon,none);
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+}
+
+.my-2 {
+    margin-top: 2rem!important;
+    margin-bottom: 2rem!important;
+}
+</style>
+
+<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+<script language="javascript" src="./calendar.js"></script>
+</head>
+<body>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+<!--      
+	  <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+-->      
+	  <div class="modal-body" id="modal_body">
+        
+      </div>
+	  <div></div>
+      <div class="modal-footer" id="modal_footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="javascript:$('#post_id_div').val('')">Close</button>
+        <button type="button" class="btn btn-primary" onclick="javascript:$('#exampleModal').modal('hide');">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form name="frm_form" method="post" action="post_user.html" target="post_user_frm">
+<input type="hidden" id="post_user_info" name="post_user_info">
+</form>
+<script>
+	function post_user(){
+		var post_user_info = $("#post_id_div").val();
+		//$("#modal_body").html("<iframe src='./post_user.html?post_user_info="+post_user_info+"' id='post_user_frm' name='post_user_frm' width='100%' height='550px' border='0'></iframe>");
+		$("#modal_body").html("<iframe src='' id='post_user_frm' name='post_user_frm' width='100%' height='550px' border='0'></iframe>");
+
+		document.getElementById("post_user_info").value = $("#post_id_div").val();
+		document.frm_form.action = "post_user.html";
+		document.frm_form.submit();
+		$("#exampleModal").modal("show");
+	}
+</script>
+
+<main class="d-flex flex-nowrap">
+
+<div class="flex-shrink-0 p-3" style="width: 220px;">
+    <a href="#" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+      <svg class="bi pe-none me-2" width="30" height="24"></svg>
+      <span class="fs-5 fw-semibold">ADMIN</span>
+    </a>
+    <ul class="list-unstyled ps-0">
+      <li class="mb-1">
+        <button onclick="javascript:location.href='user_info.html'" class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+          유저 정보
+        </button>
+        <div class="collapse" id="home-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="javascript:find_user()" class="link-body-emphasis d-inline-flex text-decoration-none rounded">계정 정보</a></li>
+            <li><a href="javascript:key_info()" class="link-body-emphasis d-inline-flex text-decoration-none rounded">열쇠 정보</a></li>
+            <li><a href="javascript:user_post_info()" class="link-body-emphasis d-inline-flex text-decoration-none rounded">우편 로그</a></li>
+			<li><a href="javascript:user_pay()" class="link-body-emphasis d-inline-flex text-decoration-none rounded">결제 정보</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button onclick="javascript:location.href='pay_info.html'" class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+          결제 정보
+        </button>
+      </li>
+      <li class="mb-1">
+        <button onclick="javascript:location.href='post_info.html'" class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+          우편 발송
+        </button>
+      </li>
+	
+
+		<li class="mb-1">
+        <button onclick="javascript:location.href='notice_info.html'" class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+          공지 사항
+        </button>
+      </li>
+		
+		<li class="mb-1">
+        <button onclick="javascript:location.href='key_log.html'" class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+          key history
+        </button>
+      </li>
+		
+
+		<li class="border-top my-3"></li>
+      <li class="mb-1">
+        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+          지표
+        </button>
+        <div class="collapse" id="account-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="idct_dau.html" class="link-dark d-inline-flex text-decoration-none rounded">DAU</a></li>
+            <li><a href="idct_mcu.html" class="link-dark d-inline-flex text-decoration-none rounded">MCU</a></li>
+            <li><a href="idct_new.html" class="link-dark d-inline-flex text-decoration-none rounded">신규 가입</a></li>
+            <li><a href="idct_total.html" class="link-dark d-inline-flex text-decoration-none rounded">총 회원 수</a></li>
+          </ul>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+
+	<div class="b-example-divider b-example-vr"></div>
+
+
+
+<div style="width: 880px;"><!--class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary"-->
+	<div style="padding-top: 3rem!important;padding-left: 3rem!important;text-align: center!important;">
+
+		<div id="view_txt" ></div>
+
+	</div>
+</div>
+
+<div id="modal_txt"></div>
+
+</main>
+
+<script>
+	
+	function post_in(){
+		$.post("post_in.html", {}, function(data){
+			$("#view_txt").html(data);
+		});
+	}
+	
+	function maxLengthCheck(object) {
+		if (object.value.length > object.max.length)
+	    object.value = object.value.slice(0, object.max.length)
+	}
+
+	function post_list(page_num){
+		var fsdate = $("#fsdate").val();
+		var fedate = $("#fedate").val();
+		
+		$.post("post_list.html", {"fsdate" : fsdate, "fedate" : fedate, "page_num":page_num}, function(data){
+			$("#view_txt").html(data);
+		});
+	}
+
+	post_list();
+</script>
+<script src="./bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<iframe name="hiddenFrame" title="hiddenFrame" style="display:none" ></iframe>
+</body>
+</html>

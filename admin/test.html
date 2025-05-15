@@ -1,0 +1,19 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+exit;
+include "cookies.php";
+?>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<?
+include "../inc/db_con.inc";
+
+$test_msg = $_POST["test_msg"];
+
+echo $test_msg."<br>";
+$test_msg = iconv("euc-kr","utf-8",$_POST["test_msg"]);
+echo $test_msg;
+
+
+	$sql = "insert into postbox(uid, msg) values (2,'$test_msg')";
+	$query = mysql_query($sql, $con);
+?>

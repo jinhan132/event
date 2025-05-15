@@ -1,0 +1,180 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+
+	include "../inc/db_con.inc";
+
+
+	$fsdate = trim($_POST["fsdate"]);
+	$fedate = trim($_POST["fedate"]);
+
+$date_query = "";
+if($fsdate && $fedate){
+	$fsdate_q = $fsdate." 00:00:00";
+	$fedate_q = $fedate." 23:59:59";
+	$date_query = " and (ctime>='$fsdate_q' and ctime<='$fedate_q')";
+}
+	$lang_query = "";
+	$ccode = $_POST["ccode"];
+	if( $ccode != "" ){
+		$lang_query = " and lang=$ccode";
+	}
+
+$page_num = $_POST["page_num"];
+
+	$cnt_query = "select count(*) from notice where ukey>0 $lang_query $date_query";
+	$cnt_query=mysql_query($cnt_query, $con);
+	$cnt_data=mysql_fetch_array($cnt_query);
+	
+	$rows=$cnt_data[0];		
+
+	$page_size = 10;
+	$max_pages = 10;
+
+	if(!$page_num){
+		$page_num=0;
+	}
+
+	$page_total=intval($rows/$page_size);
+
+	if($rows % $page_size){
+		$page_total++;
+	}
+
+
+	$tmp_cnt=$rows-$page_num;
+
+
+?>
+<!--
+<div class="input-group" style="width:60%">
+	<input type="text" class="form-control" onclick="Calendar(this);" id="fsdate" value="<?=$fsdate?>"> ~ 
+	<input type="text" class="form-control" onclick="Calendar(this);" id="fedate" value="<?=$fedate?>">&nbsp;
+	<button type="button" class="btn btn-danger" onclick="javascript:notice_list()">search</button>
+</div>
+<div style="margin-top:10px;text-align: left;"><input type="button" class="btn btn-danger" value="공지 리스트"></div>
+-->
+
+
+
+
+
+
+<table class="table">
+	<tr>
+		<th>No</th>
+		<th>등록인</th>
+		<th>등록일시</th>
+		<th>국가</th>
+		<th style="width: 400px;">내용</th>
+		<th></th>
+	</tr>
+<?
+	$i =1;
+//	$sql = "select * from admin_log_web where gubun='admin_post' $date_query order by seq desc  LIMIT $page_num, $page_size";
+	$sql = "select * from notice where ukey>0 $lang_query $date_query order by ukey desc  LIMIT $page_num, $page_size";
+	$query = mysql_query($sql);
+	while($data = mysql_fetch_array($query)){
+
+		$ukey = $data["ukey"];
+		$uid = $data["uid"];
+		$ctime = $data["ctime"];
+		$lang = $data["lang"];
+		$msg = $data["msg"];
+		$url = $data["url"];
+
+		if($lang == 0){
+			$lang_txt = "한국";
+		}else if($lang == 1){
+			$lang_txt = "일본";
+		}else if($lang == 2){
+			$lang_txt = "중국";
+		}else if($lang == 3){
+			$lang_txt = "영어";
+		}else if($lang == 4){
+			$lang_txt = "대만";
+		}
+
+	$modal_msg = htmlspecialchars($msg);
+
+	$modal_msg = str_replace(array("\r\n","\r","\n"),"\\n",$modal_msg);
+
+?>
+	<tr>
+		<td><?=$tmp_cnt - $i+1?></td>
+		<td><?=$uid?></td>
+		<td><?=$ctime?></td>
+		<td><?=$lang_txt?></td>
+		<td><div id="ukey_<?=$ukey?>"><span onclick="javascript:notice_edit(<?=$ukey?>)" style="cursor:pointer;"><?= htmlspecialchars($msg)?></span></div></td>
+		<td><button type="button" class="btn btn-outline-info" onclick="javascript:$('#modal_body').html('<?=$modal_msg?>');$('#exampleModal').modal('show');">view</button><br><p></p><button type="button" class="btn btn-danger" onclick="javascript:notice_del(<?=$ukey?>)">삭제</button></td>
+	</tr>
+
+<?
+	$i++;
+}?>
+</table>
+
+
+<div class="row justify-content-end">
+    <div class="col-6">
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    
+
+<?
+	$temp_block=intval($page_num/$page_size);
+
+	if(!intval($temp_block/$max_pages)){
+?>
+		<li class="page-item"><a class="page-link">Previous</a></li>
+<?		
+	}else{
+		$temp_prev_page=(intval($page_num/($max_pages*$page_size))-1)*($max_pages*$page_size);
+?>
+		<li class="page-item"><a class="page-link" href="javascript:notice_list(<?=$temp_prev_page?>)">Previous</a></li>
+<?
+	}
+
+
+	
+if($page_total!=1){
+		for($i=((intval($temp_block/$max_pages)*$max_pages)+1);$i<(((intval($temp_block/$max_pages)*$max_pages)+1)+$max_pages);$i++){
+			if($i<=$page_total){
+				$temp_page_num=(($rows-($page_size*$i))+$page_size);
+
+				if($page_num!=$rows-$temp_page_num){
+?>
+		<!--<a href="javascript:view_tail('<?=$tailsort?>',<?=$rows-$temp_page_num;?>)"><?= $i;?></a>-->
+		<li class="page-item"><a class="page-link" href="javascript:notice_list(<?=$rows-$temp_page_num;?>)"><?= $i;?></a></li>
+
+<?
+				}else{
+?>
+		<li class="page-item"><a class="page-link"><b><?= $i;?></b></a></li>
+<?
+				}
+			}
+		}
+	}
+
+
+	if(((intval($page_num/($page_size*$max_pages))+1)*($page_size*$max_pages))>=$rows){
+?>
+		<li class="page-item"><a class="page-link" >Next</a></li>
+<?	
+	}else{
+		$temp_next_page=(intval($page_num/($max_pages*$page_size))+1)*($max_pages*$page_size);
+?>
+		<li class="page-item"><a class="page-link" href="javascript:notice_list(<?=$temp_next_page?>)">Next</a></li>
+<?
+	}
+?>	
+    
+  </ul>
+</nav>
+
+    </div>
+    <div class="col-2">
+      <input type="button" value="신규 등록" onclick="javascript:notice_in()">
+    </div>
+  </div>

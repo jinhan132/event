@@ -1,0 +1,162 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+
+	include "../inc/db_con.inc";
+
+
+	$fsdate = trim($_POST["fsdate"]);
+	$fedate = trim($_POST["fedate"]);
+
+$date_query = "";
+if($fsdate && $fedate){
+	$fsdate_q = $fsdate." 00:00:00";
+	$fedate_q = $fedate." 23:59:59";
+	$date_query = " and (writeday>='$fsdate_q' and writeday<='$fedate_q')";
+}
+
+
+$page_num = $_POST["page_num"];
+
+	$cnt_query = "select count(*) from admin_log_web where gubun='admin_post' $date_query";
+	$cnt_query=mysql_query($cnt_query, $con);
+	$cnt_data=mysql_fetch_array($cnt_query);
+	
+	$rows=$cnt_data[0];		
+
+	$page_size = 10;
+	$max_pages = 10;
+
+	if(!$page_num){
+		$page_num=0;
+	}
+
+	$page_total=intval($rows/$page_size);
+
+	if($rows % $page_size){
+		$page_total++;
+	}
+
+
+	$tmp_cnt=$rows-$page_num;
+
+
+?>
+
+<div class="input-group" style="width:60%">
+	<input type="text" class="form-control" onclick="Calendar(this);" id="fsdate" value="<?=$fsdate?>"> ~ 
+	<input type="text" class="form-control" onclick="Calendar(this);" id="fedate" value="<?=$fedate?>">&nbsp;
+	<button type="button" class="btn btn-danger" onclick="javascript:post_list()">search</button>
+</div>
+<div style="margin-top:10px;text-align: left;"><input type="button" class="btn btn-danger" value="우편 발송 리스트"></div>
+<table class="table">
+	<tr>
+		<th>No</th>
+		<th>발송 일시</th>
+		<th>내용</th>
+		<th>사유</th>
+		<th>지급 대상</th>
+		<th>물품</th>
+	</tr>
+<?
+	$i =1;
+	$sql = "select * from admin_log_web where gubun='admin_post' $date_query order by seq desc  LIMIT $page_num, $page_size";
+	$query = mysql_query($sql);
+	while($data = mysql_fetch_array($query)){
+
+		$writeday = $data["writeday"];
+		$info = iconv("euc-kr","utf-8",$data["info"]);
+		$nick = iconv("euc-kr","utf-8",$data["nick"]);
+		$answer = $data["answer"];
+		$info = $data["info"];
+		$nick = $data["nick"];
+		$data1 = $data["data1"];
+		$txt1 = $data["txt1"];
+		$uid = $data["uid"];
+
+		$post_cnt_var = explode(",", $txt1);
+		$post_cnt = sizeof($post_cnt_var);
+		if($post_cnt > 1){
+			$ext_txt = "포함 ".$post_cnt."명";
+		}else{
+			$ext_txt = "";
+		}
+?>
+	<tr>
+		<td><?=$tmp_cnt - $i+1?></td>
+		<td><?=$writeday?></td>
+		<td><?=$answer?></td>
+		<td><?=$info?></td>
+		<td><?=$nick?><?=$ext_txt?></td>
+		<td><?=$data1?>개</td>
+	</tr>
+
+<?
+	$i++;
+}?>
+</table>
+
+
+<div class="row justify-content-end">
+    <div class="col-6">
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    
+
+<?
+	$temp_block=intval($page_num/$page_size);
+
+	if(!intval($temp_block/$max_pages)){
+?>
+		<li class="page-item"><a class="page-link">Previous</a></li>
+<?		
+	}else{
+		$temp_prev_page=(intval($page_num/($max_pages*$page_size))-1)*($max_pages*$page_size);
+?>
+		<li class="page-item"><a class="page-link" href="javascript:post_list(<?=$temp_prev_page?>)">Previous</a></li>
+<?
+	}
+
+
+	
+if($page_total!=1){
+		for($i=((intval($temp_block/$max_pages)*$max_pages)+1);$i<(((intval($temp_block/$max_pages)*$max_pages)+1)+$max_pages);$i++){
+			if($i<=$page_total){
+				$temp_page_num=(($rows-($page_size*$i))+$page_size);
+
+				if($page_num!=$rows-$temp_page_num){
+?>
+		<!--<a href="javascript:view_tail('<?=$tailsort?>',<?=$rows-$temp_page_num;?>)"><?= $i;?></a>-->
+		<li class="page-item"><a class="page-link" href="javascript:post_list(<?=$rows-$temp_page_num;?>)"><?= $i;?></a></li>
+
+<?
+				}else{
+?>
+		<li class="page-item"><a class="page-link"><b><?= $i;?></b></a></li>
+<?
+				}
+			}
+		}
+	}
+
+
+	if(((intval($page_num/($page_size*$max_pages))+1)*($page_size*$max_pages))>=$rows){
+?>
+		<li class="page-item"><a class="page-link" >Next</a></li>
+<?	
+	}else{
+		$temp_next_page=(intval($page_num/($max_pages*$page_size))+1)*($max_pages*$page_size);
+?>
+		<li class="page-item"><a class="page-link" href="javascript:post_list(<?=$temp_next_page?>)">Next</a></li>
+<?
+	}
+?>	
+    
+  </ul>
+</nav>
+
+    </div>
+    <div class="col-2">
+      <input type="button" value="신규 발송" onclick="javascript:post_in()">
+    </div>
+  </div>

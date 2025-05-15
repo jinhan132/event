@@ -1,0 +1,182 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+
+function GetGoodsName($product_id){
+	switch( $product_id )
+	{
+	case "com.tygem.tsumego.key_monthly": $goods_name = "월간 한정";break;
+	case "com.tygem.tsumego.key_product1": $goods_name = "단품1";break;
+	case "com.tygem.tsumego.key_product2": $goods_name = "단품2";break;
+	case "com.tygem.tsumego.key_product3": $goods_name = "단품3";break;
+
+	case "com.tygem.ios.tsumego.key_monthly": $goods_name = "월간 한정";break;
+	case "com.tygem.ios.tsumego.key_product1": $goods_name = "단품1";break;
+	case "com.tygem.ios.tsumego.key_product2": $goods_name = "단품2";break;
+	case "com.tygem.ios.tsumego.key_product3": $goods_name = "단품3";break;
+	}
+	return $goods_name;
+}
+
+	include "../inc/db_con.inc";
+
+
+	$fsdate = trim($_POST["fsdate"]);
+	$fedate = trim($_POST["fedate"]);
+
+$date_query = "";
+if($fsdate && $fedate){
+	$fsdate_q = $fsdate." 00:00:00";
+	$fedate_q = $fedate." 23:59:59";
+	$date_query = " and (writeday>='$fsdate_q' and writeday<='$fedate_q')";
+}
+
+
+$page_num = $_POST["page_num"];
+
+$date_query = "";
+if($fsdate && $fedate){
+	$fsdate_q = $fsdate." 00:00:00";
+	$fedate_q = $fedate." 23:59:59";
+	$date_query = " and (mob_payment_history.buy_date>='$fsdate_q' and mob_payment_history.buy_date<='$fedate_q')";
+}
+
+	$page_num = $_POST["page_num"];
+
+	$cnt_query = "select count(*) from mob_payment_history, mob_paylog where mob_payment_history.bill_data = mob_paylog.order_id  $date_query";
+	$cnt_query=mysql_query($cnt_query, $con);
+	$cnt_data=mysql_fetch_array($cnt_query);
+	
+	$rows=$cnt_data[0];		
+
+	
+
+	$page_size = 10;
+	$max_pages = 10;
+
+	if(!$page_num){
+		$page_num=0;
+	}
+
+	$page_total=intval($rows/$page_size);
+
+	if($rows % $page_size){
+		$page_total++;
+	}
+
+
+	$tmp_cnt=$rows-$page_num;
+
+
+
+	$sql = "select * from mob_payment_history,mob_paylog where mob_payment_history.bill_data = mob_paylog.order_id  $date_query order by mob_payment_history.idx desc  LIMIT $page_num, $page_size";
+	$query = mysql_query($sql, $con);
+?>
+
+<div class="input-group" style="width:60%">
+	<input type="text" class="form-control" onclick="Calendar(this);" id="fsdate" value="<?=$fsdate?>"> ~ 
+	<input type="text" class="form-control" onclick="Calendar(this);" id="fedate" value="<?=$fedate?>">&nbsp;
+	<button type="button" class="btn btn-danger" onclick="javascript:pay_list()">search</button>
+</div>
+
+<table class="table">
+	<tr>
+		<th>no</th>
+		<th>결제 일시</th>
+		<th>스토어</th>
+		<th>uid</th>
+		<th>상품</th>
+		<th>주문번호</th>
+
+	</tr>
+<?
+
+	$i =1;
+
+	while($data = mysql_fetch_array($query)){
+
+		$order_id = $data["order_id"];
+	
+	$tr_class = "";
+	if($data["state"] == "cancel"){
+		$tr_class = " style='text-decoration: line-through;'";
+	}
+
+?>
+	<tr<?=$tr_class?>>
+		<td><?=$tmp_cnt-$i+1?></td>
+		<td><?=$data["buy_date"]?></td>
+		<td><?=$data["device"]?></td>
+		<td><?=$data["uid"]?></td>
+		<td><?= GetGoodsName($data["product_name"])?> (<?=number_format($data["payment"])?>)</td>
+		<td><?=$data["bill_data"]?></td>
+	</tr>
+
+<?
+	$i++;
+}
+
+
+?>
+</table>
+
+
+<div>
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    
+
+<?
+	$temp_block=intval($page_num/$page_size);
+
+	if(!intval($temp_block/$max_pages)){
+?>
+		<li class="page-item"><a class="page-link">Previous</a></li>
+<?		
+	}else{
+		$temp_prev_page=(intval($page_num/($max_pages*$page_size))-1)*($max_pages*$page_size);
+?>
+		<li class="page-item"><a class="page-link" href="javascript:pay_list(<?=$temp_prev_page?>)">Previous</a></li>
+<?
+	}
+
+
+	
+if($page_total!=1){
+		for($i=((intval($temp_block/$max_pages)*$max_pages)+1);$i<(((intval($temp_block/$max_pages)*$max_pages)+1)+$max_pages);$i++){
+			if($i<=$page_total){
+				$temp_page_num=(($rows-($page_size*$i))+$page_size);
+
+				if($page_num!=$rows-$temp_page_num){
+?>
+		<!--<a href="javascript:view_tail('<?=$tailsort?>',<?=$rows-$temp_page_num;?>)"><?= $i;?></a>-->
+		<li class="page-item"><a class="page-link" href="javascript:pay_list(<?=$rows-$temp_page_num;?>)"><?= $i;?></a></li>
+
+<?
+				}else{
+?>
+		<li class="page-item"><a class="page-link"><b><?= $i;?></b></a></li>
+<?
+				}
+			}
+		}
+	}
+
+
+	if(((intval($page_num/($page_size*$max_pages))+1)*($page_size*$max_pages))>=$rows){
+?>
+		<li class="page-item"><a class="page-link" >Next</a></li>
+<?	
+	}else{
+		$temp_next_page=(intval($page_num/($max_pages*$page_size))+1)*($max_pages*$page_size);
+?>
+		<li class="page-item"><a class="page-link" href="javascript:pay_list(<?=$temp_next_page?>)">Next</a></li>
+<?
+	}
+?>	
+    
+  </ul>
+</nav>
+
+    </div>
+    
+<? mysql_close($con); ?>

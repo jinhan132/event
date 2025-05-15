@@ -1,0 +1,193 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+
+
+	$uinfo = $_POST["uinfo"];
+	$find_txt = trim($_POST["find_txt"]);
+
+	$fsdate = trim($_POST["fsdate"]);
+	$fedate = trim($_POST["fedate"]);
+
+	include "../inc/db_con.inc";
+
+
+	//$find_txt = iconv("utf-8","euc-kr",$find_txt);
+
+
+$sql = "select * from user_basic, quiz_user where user_basic.uid = quiz_user.uid and user_basic.$uinfo = '$find_txt' ";
+	$query = mysql_query($sql, $con);
+	$data = mysql_fetch_array($query);
+
+if($data["ukey"] == ""){
+	$exampleModalLabel = "not find";
+	$modal_body = "사용자를 찾을수 없습니다.";
+}else{
+
+	$uid = $data["uid"];
+
+$date_query = "";
+if($fsdate && $fedate){
+	$fsdate_q = $fsdate." 00:00:00";
+	$fedate_q = $fedate." 23:59:59";
+	$date_query = " and (reg_date>='$fsdate_q' and reg_date<='$fedate_q')";
+}
+
+	$page_num = $_POST["page_num"];
+
+	$cnt_query = "select count(*) from key_history where uid=$uid $date_query";
+	$cnt_query=mysql_query($cnt_query, $con);
+	$cnt_data=mysql_fetch_array($cnt_query);
+	
+	$rows=$cnt_data[0];		
+
+	
+
+	$page_size = 10;
+	$max_pages = 10;
+
+	if(!$page_num){
+		$page_num=0;
+	}
+
+	$page_total=intval($rows/$page_size);
+
+	if($rows % $page_size){
+		$page_total++;
+	}
+
+
+	$tmp_cnt=$rows-$page_num;
+
+
+
+	$sql = "select * from key_history where uid=$uid $date_query order by seq desc  LIMIT $page_num, $page_size";
+
+	$query = mysql_query($sql, $con);
+
+mysql_close($con);
+?>
+<div class="container my-2">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb p-3 bg-body-tertiary rounded-3">
+      <li class="breadcrumb-item"><a href="javascript:find_user()" style="text-decoration: none!important;">계정 정보</a></li>
+      <li class="breadcrumb-item" style="font-weight: 900;"><span onclick="javascript:key_info(<?=$uid?>)">열쇠 정보</span></li>
+      <li class="breadcrumb-item"><a href="javascript:user_post_info(<?=$uid?>)" style="text-decoration: none!important;">우편 로그</a></li>
+	  <li class="breadcrumb-item"><a href="javascript:user_pay(<?=$uid?>)" style="text-decoration: none!important;">결제 정보</a></li>
+    </ol>
+  </nav>
+</div>
+
+<div class="input-group" style="width:60%">
+	<input type="text" class="form-control" onclick="Calendar(this);" id="fsdate" value="<?=$fsdate?>"> ~ 
+	<input type="text" class="form-control" onclick="Calendar(this);" id="fedate" value="<?=$fedate?>">&nbsp;
+	<button type="button" class="btn btn-danger" onclick="javascript:key_info(<?=$uid?>)">search</button>
+</div>
+
+
+
+<br>
+
+
+<table class="table">
+	<tr>
+		<th>no</th>
+		<th>일시</th>
+		<th>TYPE</th>
+		<th>+</th>
+		<th>-</th>
+		<th>상세 로그</th>
+		<th>남은 열쇠</th>
+	</tr>
+<? 
+	$i = 1;
+while($data = mysql_fetch_array($query)){
+	$ktype = $data["ktype"];
+	if($ktype == 1){$ktype = "리워드 광고";
+	}else if($ktype == 2){$ktype = "출석 체크 (일반)";
+	}else if($ktype == 3){$ktype = "출석 체크 (추가)";
+	}else if($ktype == 4){$ktype = "우편수령";
+	}else if($ktype == 5){$ktype = "문제 해제";
+	}else if($ktype == 6){$ktype = "해답도 보기";
+	}else if($ktype == 7){$ktype = "기력 테스트";
+	}else if($ktype == 8){$ktype = "운영자 지급";
+	}else if($ktype == 9){$ktype = "운영자 소진";
+	}else{$ktype="기타";}
+	
+?>
+	<tr>
+		<td><?=$tmp_cnt - $i + 1?></td>
+		<td><?=$data["reg_date"]?></td>
+		<td><?=$ktype?></td>
+		<td><?=$data["p_data"]?></td>
+		<td><?=$data["m_data"]?></td>
+		
+		<td><?=$data["info"]?></td>
+		<td><?=$data["kcnt"]?></td>
+	</tr>
+<?
+	$i++;
+}?>
+</table>
+
+<div>
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    
+
+<?
+	$temp_block=intval($page_num/$page_size);
+
+	if(!intval($temp_block/$max_pages)){
+?>
+		<li class="page-item"><a class="page-link">Previous</a></li>
+<?		
+	}else{
+		$temp_prev_page=(intval($page_num/($max_pages*$page_size))-1)*($max_pages*$page_size);
+?>
+		<li class="page-item"><a class="page-link" href="javascript:key_info(<?=$uid?>,<?=$temp_prev_page?>)">Previous</a></li>
+<?
+	}
+
+
+	
+if($page_total!=1){
+		for($i=((intval($temp_block/$max_pages)*$max_pages)+1);$i<(((intval($temp_block/$max_pages)*$max_pages)+1)+$max_pages);$i++){
+			if($i<=$page_total){
+				$temp_page_num=(($rows-($page_size*$i))+$page_size);
+
+				if($page_num!=$rows-$temp_page_num){
+?>
+		<!--<a href="javascript:view_tail('<?=$tailsort?>',<?=$rows-$temp_page_num;?>)"><?= $i;?></a>-->
+		<li class="page-item"><a class="page-link" href="javascript:key_info(<?=$uid?>, <?=$rows-$temp_page_num;?>)"><?= $i;?></a></li>
+
+<?
+				}else{
+?>
+		<li class="page-item"><a class="page-link"><b><?= $i;?></b></a></li>
+<?
+				}
+			}
+		}
+	}
+
+
+	if(((intval($page_num/($page_size*$max_pages))+1)*($page_size*$max_pages))>=$rows){
+?>
+		<li class="page-item"><a class="page-link" >Next</a></li>
+<?	
+	}else{
+		$temp_next_page=(intval($page_num/($max_pages*$page_size))+1)*($max_pages*$page_size);
+?>
+		<li class="page-item"><a class="page-link" href="javascript:key_info(<?=$uid?>, <?=$temp_next_page?>)">Next</a></li>
+<?
+	}
+?>	
+    
+  </ul>
+</nav>
+</div>
+
+
+<?
+}
+?>

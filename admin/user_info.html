@@ -1,0 +1,546 @@
+<?
+include "cookies.php";
+
+
+if(!$s_uid){
+?><script>location.href="https://www.tygem.com/login.php?gotourl=https://service.tygem.com/deadlive/admin/";</script><?
+	exit;
+}
+
+if(mb_substr($s_uid,0,3,'euc-kr') == "운영자"){
+}else{
+	echo "ADMIN AREA";
+	exit;
+}
+?>
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
+<link href="./bootstrap.min.css" rel="stylesheet"  crossorigin="anonymous">
+
+<style>
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+html {
+  height: -webkit-fill-available;
+}
+
+main {
+  height: 100vh;
+  height: -webkit-fill-available;
+  max-height: 100vh;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.dropdown-toggle { outline: 0; }
+
+.btn-toggle {
+  padding: .25rem .5rem;
+  font-weight: 600;
+  color: var(--bs-emphasis-color);
+  background-color: transparent;
+}
+.btn-toggle:hover,
+.btn-toggle:focus {
+  color: rgba(var(--bs-emphasis-color-rgb), .85);
+  background-color: var(--bs-tertiary-bg);
+}
+
+.btn-toggle::before {
+  width: 1.25em;
+  line-height: 0;
+  content: url("data:image/svg+xml,%3csvg xmlns='//www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+  transition: transform .35s ease;
+  transform-origin: .5em 50%;
+}
+
+[data-bs-theme="dark"] .btn-toggle::before {
+  content: url("data:image/svg+xml,%3csvg xmlns='//www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%28255,255,255,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+}
+
+.btn-toggle[aria-expanded="true"] {
+  color: rgba(var(--bs-emphasis-color-rgb), .85);
+}
+.btn-toggle[aria-expanded="true"]::before {
+  transform: rotate(90deg);
+}
+
+.btn-toggle-nav a {
+  padding: .1875rem .5rem;
+  margin-top: .125rem;
+  margin-left: 1.25rem;
+}
+.btn-toggle-nav a:hover,
+.btn-toggle-nav a:focus {
+  background-color: var(--bs-tertiary-bg);
+}
+
+.scrollarea {
+  overflow-y: auto;
+}
+
+ .b-example-divider {
+        width: 100%;
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+  .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+
+
+.form-select {
+    --bs-form-select-bg-img: url(data:image/svg+xml,%3csvg xmlns='//www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e);
+    display: block;
+    width: 100%;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    background-image: var(--bs-form-select-bg-img),var(--bs-form-select-bg-icon,none);
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+}
+
+.my-2 {
+    margin-top: 2rem!important;
+    margin-bottom: 2rem!important;
+}
+</style>
+
+<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+<script language="javascript" src="./calendar.js"></script>
+</head>
+<body>
+
+
+<!--
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button>
+-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal_body">
+        ...
+      </div>
+      <div class="modal-footer" id="modal_footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+     
+	  <div class="modal-body" id="modal_body2">
+        
+      </div>
+	  <div></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="javascript:$('#post_id_div').val('')">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="nick_div" value="no"></div><div id="leave_div"></div>
+<script>
+	function post_user(){
+		$("#modal_body2").html("<iframe src='./post_user.html' id='post_user_frm' width='100%' height='550px' border='0'></iframe>");
+		$("#exampleModal2").modal("show");
+	}
+</script>
+<script>
+	
+	function adminNickProcess(uid){
+		if( $("#nick").val() == ""){
+			$("#nick_text").html("중복확인");
+			return;
+		}
+
+		if($("#nick_div").val() == "yes"){
+			var nick = $("#nick").val();
+			$.post("user_nick_process.php", {"uid" : uid, "nick" : nick}, function(data){
+				$("#nick_div").html(data);
+				$("#exampleModal").modal("hide");
+			});
+		}else{
+			$("#nick_text").html("중복확인");
+		}
+	}
+
+	function nickCheck(uid){
+		var nick = $("#nick").val();
+		$("#nick_div").val("no");
+		$("#nick_text").attr("class","text-danger");
+		if(nick.length>0){
+			$.post("nick_check.php", {"uid" : uid, "nick" : nick}, function(data){
+				$("#nick_div").html(data);
+
+			});
+		}
+	}
+	
+	function adminLeaveProcess(uid){
+		$("#leave_text").html("&nbsp;");
+		var leave_info = $("#leave_info").val();
+		if(leave_info.length > 0){
+			$.post("user_leave_process.php", {"uid" : uid, "leave_info" : leave_info}, function(data){
+				if(data == "OK"){
+					alert("탈퇴가 처리되었습니다.");
+					$("#exampleModal").modal("hide");
+					location.href = "user_info.html";
+				}else{
+					alert("탈퇴처리 실패");
+				}
+			});
+		}else{
+			$("#leave_text").html("탈퇴 사유를 입력해주세요");
+		}
+	}
+
+	function adminLeave(uid){
+		$("#exampleModalLabel").text("탈퇴 사유를 입력해주세요");
+		$("#modal_body").html("<div class='row gy-3'><div class='col-md-9'><input type='text' id='leave_info' class='form-control' placeholder='탈퇴 사유를 입력해주세요' ></div><div id='leave_text' class='text-danger'>&nbsp;</div></div>");
+		$("#modal_footer").html("<button type='button' class='btn btn-secondary' data-bs-dismiss='modal' style='width:100px;'> 취소 </button><button type='button' onclick=\"javascript:adminLeaveProcess("+uid+")\" class='btn btn-primary' style='width:100px;'> 확인 </button>");
+		$('#exampleModal').modal("show");
+	}
+
+	function adminRankProcess(uid){
+		var grade = $("#grade").val();
+		$.post("user_rank_process.php", {"uid" : uid, "grade" : grade}, function(data){
+			$("#nick_div").html(data);
+		});
+		$("#exampleModal").modal("hide");
+	}
+
+	function adminRank(uid, rank_grade){
+		var form_txt = "";
+		var form_select = "";
+		var form_select1, form_select2, form_select3, form_select4, form_select5, form_select6, form_select7, form_select8, form_select9;
+		$("#exampleModalLabel").text("변경할 기력을 선택해주세요");
+
+		form_txt += "<select class='form-select' id='grade'>";
+		var i = 1;
+		while(i<=30){
+			if(i == rank_grade){
+				form_select = " selected";
+			}else{form_select = "";}
+			form_txt += "<option value='"+i+"' "+form_select+">"+(31 - i)+"급"
+			i++;
+		}
+		if(rank_grade == 31){form_select1 = " selected";}
+		form_txt += "<option value=31"+form_select1+">1단";
+		if(rank_grade == 32){form_select2 = " selected";}
+		form_txt += "<option value=32"+form_select2+">2단";
+		if(rank_grade == 33){form_select3 = " selected";}
+		form_txt += "<option value=33"+form_select3+">3단";
+		if(rank_grade == 34){form_select4 = " selected";}
+		form_txt += "<option value=34"+form_select4+">4단";
+		if(rank_grade == 35){form_select5 = " selected";}
+		form_txt += "<option value=35"+form_select5+">5단";
+		if(rank_grade == 36){form_select6 = " selected";}
+		form_txt += "<option value=36"+form_select6+">6단";
+		if(rank_grade == 37){form_select7 = " selected";}
+		form_txt += "<option value=37"+form_select7+">7단";
+		if(rank_grade == 38){form_select8 = " selected";}
+		form_txt += "<option value=38"+form_select8+">8단";
+		if(rank_grade == 39){form_select9 = " selected";}
+		form_txt += "<option value=39"+form_select9+">9단";
+		form_txt += "</select>";
+
+
+		$("#modal_body").html("<div class='row gy-2'><div class='col-md-6'>"+form_txt+"</div></div>");
+		$("#modal_footer").html("<button type='button' class='btn btn-secondary' data-bs-dismiss='modal' style='width:100px;'> 취소 </button><button type='button' onclick=\"javascript:adminRankProcess("+uid+")\" class='btn btn-primary' style='width:100px;'> 확인 </button>");
+		$('#exampleModal').modal("show");
+	}
+
+
+	function adminNick(uid){
+		$("#exampleModalLabel").text("변경할 닉네임을 입력해주세요");
+		$("#modal_body").html("<div class='row gy-3'><div class='col-md-6'><input type='text' id='nick' class='form-control' placeholder='최대 10글자까지 가능' maxlength='10'></div><div class='col-md-3'><button class='btn btn-primary' onclick=\"nickCheck('"+uid+"')\">중복 확인</button></div><div id='nick_text' class='text-danger'></div></div>");
+		$("#modal_footer").html("<button type='button' class='btn btn-secondary' data-bs-dismiss='modal' style='width:100px;'> 취소 </button><button type='button' onclick=\"javascript:adminNickProcess("+uid+")\" class='btn btn-primary' style='width:100px;'> 확인 </button>");
+		$('#exampleModal').modal("show");
+	}
+	
+	var motal_txt;
+
+	function adminGiveKey(uid, do_cnt, key_type){
+		if(key_type == "plus"){
+			modal_txt = "지급";
+		}else if(key_type == "minus"){
+			modal_txt = "소진";
+		}
+		$("#exampleModalLabel").text("열쇠 "+modal_txt);
+		$("#modal_body").html("<table class='table'><tr><td>보유 열쇠</td><td>"+do_cnt+"</td></tr><tr><td>"+modal_txt+" 열쇠</td><td><input type='number' max='9999' maxlength='4' oninput='maxLengthCheck(this);' class='form-control' id='key_cnt' placeholder='"+modal_txt+"할 열쇠 개수를 입력하세요'></td></tr><tr><td>"+modal_txt+" 사유</td><td><textarea class='form-control' id='pay_reason' placeholder='"+modal_txt+" 사유를 입력하세요'></textarea></td></tr></table>");
+		$("#modal_footer").html("<button type='button' class='btn btn-secondary' data-bs-dismiss='modal' style='width:100px;'> 취소 </button><button type='button' onclick=\"javascript:adminKeyProcess('"+uid+"','"+key_type+"',"+do_cnt+")\" class='btn btn-primary' style='width:100px;'> 확인 </button>");
+		$('#exampleModal').modal("show");
+	}
+
+	function adminKeyProcess(uid, key_type, do_cnt){
+		if(key_type == "plus"){
+			modal_txt = "지급";
+		}else if(key_type == "minus"){
+			modal_txt = "소진";
+		}
+		var key_cnt = $("#key_cnt").val();
+		var pay_reason = $("#pay_reason").val();
+		if(key_cnt > 0){
+		}else{
+			alert(modal_txt+"할 열쇠 개수를 입력해주세요.");
+			$("#key_cnt").focus();
+			return;
+		}
+		if(pay_reason.length > 0){
+		}else{
+			alert(modal_txt+" 사유를 입력해주세요.");
+			$("#pay_reason").focus();
+			return;
+		}
+		
+		if(key_type == "minus" && do_cnt < key_cnt){
+			alert("보유 열쇠보다 많은 수 입력 불가");
+			return;
+		}
+
+		$.post("user_key_process.php", {"uid" : uid, "key_type" : key_type, "key_cnt" : key_cnt, "pay_reason" : pay_reason}, function(data){
+			$("#modal_txt").html(data);
+			$("#exampleModal").modal("hide");
+		});
+
+		
+
+	}
+
+	function maxLengthCheck(object) {
+		if (object.value.length > object.max.length)
+	    object.value = object.value.slice(0, object.max.length)
+	}
+</script>
+
+<main class="d-flex flex-nowrap">
+
+<div class="flex-shrink-0 p-3" style="width: 220px;">
+    <a href="#" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+      <svg class="bi pe-none me-2" width="30" height="24"></svg>
+      <span class="fs-5 fw-semibold">ADMIN</span>
+    </a>
+    <ul class="list-unstyled ps-0">
+      <li class="mb-1">
+        <button onclick="javascript:location.href='user_info.html'" class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+          유저 정보
+        </button>
+        <div class="collapse show" id="home-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="javascript:find_user()" class="link-body-emphasis d-inline-flex text-decoration-none rounded">계정 정보</a></li>
+            <li><a href="javascript:key_info()" class="link-body-emphasis d-inline-flex text-decoration-none rounded">열쇠 정보</a></li>
+            <li><a href="javascript:user_post_info()" class="link-body-emphasis d-inline-flex text-decoration-none rounded">우편 로그</a></li>
+			<li><a href="javascript:user_pay()" class="link-body-emphasis d-inline-flex text-decoration-none rounded">결제 정보</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button onclick="javascript:location.href='pay_info.html'" class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+          결제 정보
+        </button>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false" onclick="javascript:location.href='post_info.html'">
+          우편 발송
+        </button>
+      </li>
+
+
+
+	  <li class="mb-1">
+        <button onclick="javascript:location.href='notice_info.html'" class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+          공지 사항
+        </button>
+      </li>
+		
+		<li class="mb-1">
+        <button onclick="javascript:location.href='key_log.html'" class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+          key history
+        </button>
+      </li>
+
+	 <li class="border-top my-3"></li>
+      <li class="mb-1">
+        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+          지표
+        </button>
+        <div class="collapse" id="account-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="idct_dau.html" class="link-dark d-inline-flex text-decoration-none rounded">DAU</a></li>
+            <li><a href="idct_mcu.html" class="link-dark d-inline-flex text-decoration-none rounded">MCU</a></li>
+            <li><a href="idct_new.html" class="link-dark d-inline-flex text-decoration-none rounded">신규 가입</a></li>
+            <li><a href="idct_total.html" class="link-dark d-inline-flex text-decoration-none rounded">총 회원 수</a></li>
+          </ul>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+
+	<div class="b-example-divider b-example-vr"></div>
+
+
+
+<div style="width: 880px;"><!--class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary"-->
+
+
+
+<div style="padding-top: 3rem!important;padding-left: 3rem!important;text-align: center!important;">
+
+<div class="row">
+	<div class="col-md-3">
+		<select class="form-select" id="uinfo" required>
+			<option value="nick">USER Nick</option>
+			<option value="uid">Uid</option>
+	    </select>
+	</div>
+	<div class="col-md-3">
+		  <div class="input-group">
+            <input type="text" class="form-control" id="find_txt" onkeypress="search_user(event)" placeholder="">
+            <button type="button" onclick="javascript:find_user()" class="btn btn-secondary">find</button>
+          </div>
+	</div>
+
+	<div class="col-md-3">
+		<button type="button" onclick="javascript:post_user()" class="btn btn-primary">ALL USER</button>
+	</div>
+</div>
+
+</div>
+
+	
+<div id="view_txt" style="padding-left: 3rem!important;"></div>
+
+
+</div>
+
+<div id="modal_txt"></div>
+<script>
+	function search_user(e){
+
+		if(e.keyCode == 13){
+			find_user();
+		}
+	}
+
+	function find_user(){
+		
+		var uinfo = $("#uinfo").val();
+		var find_txt = $("#find_txt").val();
+
+if(find_txt == ""){
+	alert("회원정보 입력하세요");
+	return;
+}
+
+		$.post("user_info_process.php", {"uinfo" : uinfo, "find_txt" : find_txt}, function(data){
+			$("#view_txt").html(data);
+		});
+	}
+
+	function key_info(uid, page_num){
+		var uinfo = $("#uinfo").val();
+		var find_txt = $("#find_txt").val();
+		var fsdate = $("#fsdate").val();
+		var fedate = $("#fedate").val();
+
+		$.post("key_info.html", {"uinfo" : uinfo, "find_txt" : find_txt, "fsdate" : fsdate, "fedate" : fedate, "page_num":page_num}, function(data){
+			$("#view_txt").html(data);
+		});
+	}
+
+	function user_post_info(uid, page_num, post_type){
+		var uinfo = $("#uinfo").val();
+		var find_txt = $("#find_txt").val();
+		var fsdate = $("#fsdate").val();
+		var fedate = $("#fedate").val();
+
+		$.post("user_post.html", {"uinfo" : uinfo, "find_txt" : find_txt, "fsdate" : fsdate, "fedate" : fedate, "page_num":page_num,"post_type":post_type}, function(data){
+			$("#view_txt").html(data);
+		});
+	}
+
+	function post_del_process(uid, seq){
+		var uinfo = $("#uinfo").val();
+		var find_txt = $("#find_txt").val();
+		if(confirm("삭제 처리하시겠습니까?")){
+			$.post("post_del_process.php", {"uid":uid, "uinfo" : uinfo, "find_txt" : find_txt, "seq":seq}, function(data){
+				$("#view_txt").html(data);
+			});
+		}
+	}
+
+	function user_pay(uid, page_num){
+		var uinfo = $("#uinfo").val();
+		var find_txt = $("#find_txt").val();
+		var fsdate = $("#fsdate").val();
+		var fedate = $("#fedate").val();
+
+		$.post("user_pay.html", {"uinfo" : uinfo, "find_txt" : find_txt, "fsdate" : fsdate, "fedate" : fedate, "page_num":page_num}, function(data){
+			$("#view_txt").html(data);
+		});
+	}
+
+	function pay_cancel(uid, order_id){
+		var uinfo = $("#uinfo").val();
+		var find_txt = $("#find_txt").val();
+		if(confirm("환불 처리하시겠습니까?")){
+			$.post("pay_cancel_process.php", {"uid" : uid, "uinfo" : uinfo, "find_txt" : find_txt, "order_id" : order_id}, function(data){
+			$("#view_txt").html(data);
+			});
+		}
+	}
+</script>
+
+
+</main>
+<script src="./bootstrap.bundle.min.js"  crossorigin="anonymous"></script>
+
+</body>
+</html>

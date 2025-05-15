@@ -1,0 +1,30 @@
+<?
+	include "../inc/db_con.inc";
+
+	$sql = "select * from quiz_list";
+	$query = mysql_query($sql, $con);
+?>
+<table border="0" cellpadding="0" cellspacing="0" height="100%">
+	<tr align="center" height="24">
+		<td width="100">qno</td>
+		<td width="30">level</td>
+		<td width="70">suc_total</td>
+		<td width="70">work_total</td>
+		<td width="70">suc_first</td>
+	</tr>
+<?
+	while($data = mysql_fetch_array($query)){
+?>
+	<tr align="center">
+		<td><?=$data["qno"]?></td>
+		<td><?=$data["level"]?></td>
+		<td><?=$data["suc_total"]?></td>
+		<td><?=$data["work_total"]?></td>
+		<td><?=$data["suc_first"]?></td>
+	</tr>
+<?
+	}
+
+	mysql_close($con);
+?>
+</table>
