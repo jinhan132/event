@@ -1,0 +1,323 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+
+include_once "/home/www/inc/define.h";
+include_once "$docPath/inc/session.inc";
+
+$s_uid = iconv("euc-kr","utf-8",$s_uid);
+
+
+
+if( substr($s_uid,0,9) != "운영자" ){
+	exit;
+}
+
+include "../db/member.inc";
+include "../db/member2.inc";
+
+
+$set_round = 1;
+$set_game = 1;
+
+if($_GET["round"]){
+	$set_round = $_GET["round"];
+}
+if($_GET["game"]){
+	$set_game = $_GET["game"];
+}
+
+	$set_date = $game_date;
+
+	$set_date_var = explode("-",$set_date);
+	$betgame_kind = "betgame".$set_date_var[0].$set_date_var[1].$set_date_var[2];
+	$game_time_start = $set_date." 00:00:00";
+	$game_time_end = $set_date." 23:59:59";
+
+@include "../db/game_".$set_round."_".$set_game.".inc";
+
+
+
+if($game_date == ""){
+	$game_date = $set_date;
+}
+?>
+<head>
+<style>
+body{margin:10;padding:10}
+input, select {height:30px;}
+td{font-family:'굴림',Gulim,Helvetica,sans-serif;font-size:13px;color:#000}
+</style>
+<script type="text/javascript" src="/js/jquery-lastest.js"></script>
+</head>
+<body>
+
+<input type="button" value="한국선수" style="width:100px;height:40px;" onclick="javascript:location.href='member.html'">
+<input type="button" value="중국선수" style="width:100px;height:40px;" onclick="javascript:location.href='cmember.html'">
+<input type="button" value="승부예측" style="width:100px;height:40px;color:blue" onclick="javascript:location.href='round.html'">
+<input type="button" value="상록수상점" style="width:100px;height:40px;" onclick="javascript:location.href='shop.html'">
+<br><br>
+
+
+
+
+
+<table>
+	<tr>
+		<td valign="top">
+
+<table border="0" cellpadding="1" cellspacing="1" width="600" bgcolor="000000">
+	<tr align="center" bgcolor="ffffff" style="cursor:pointer;">
+		<td width="100" height="30" <? if($set_game == 1){echo "bgcolor='#dddddd'";}?> onclick="javascript:location.href='?round=1&game=1'">4월 22일(월)</td>
+		<td width="100" height="30" <? if($set_game == 2){echo "bgcolor='#dddddd'";}?> onclick="javascript:location.href='?round=1&game=2'">4월 29일(월)</td>
+		<td width="100" height="30" <? if($set_game == 3){echo "bgcolor='#dddddd'";}?> onclick="javascript:location.href='?round=1&game=3'">5월 6일(월)</td>
+		<td width="100" height="30" <? if($set_game == 4){echo "bgcolor='#dddddd'";}?> onclick="javascript:location.href='?round=1&game=4'">5월 13일(월)</td>
+		
+	</tr>
+	
+</table>
+
+		</td>
+		<td valign="top"><input type="button" value="예측참여자" onclick="javascript:event_join(<?=$set_round?>,<?=$set_game?>)"></td>
+	</tr>
+</table>
+
+
+<table border="0">
+	<tr>
+		<td valign="top">
+
+
+<form name="submit_form" method="post" action="round_process.php" target="hiddenFrame">
+<input type="hidden" name="set_round" value="<?=$set_round?>">
+<input type="hidden" name="set_game" value="<?=$set_game?>">
+<br>
+<table width="500">
+	<tr><td align="center"><input type="text" name="game_date" value="<?=$game_date?>" style="width:100px;"></td></tr>
+</table>
+<br>
+
+
+
+<table border="0" cellpadding="1" cellspacing="1" width="610" bgcolor="dddddd">
+	<tr bgcolor="white" align="center">
+
+		<td><input type="checkbox" name="winA" value="A" <? if($winA=="A"){echo "checked";} ?> style="width:30px;"></td>
+		<td><select name="pointA">
+			<option value="50">50
+		</select></td>
+		<td width="130">
+		한국 상록수 연구실
+		</td>
+		<td width="80">VS</td>
+		<td width="130">
+		중국 멍타이링 도장
+		</td>
+		<td><select name="pointB">
+			<option value="50">50
+		</select></td>
+		<td><input type="checkbox" name="winB" value="B" <? if($winB=="B"){echo "checked";} ?> style="width:30px;"></td>
+
+	</tr>
+</table>
+
+
+
+<table width="610" border="0" height="150">
+		<tr>
+			<td width="220" align="center">
+
+<script>
+	function event_join(set_round, set_game){
+		$.post("admin_betevent.php", {"set_round" : set_round, "set_game":set_game}, function(data){
+			$("#event_area").html(data);
+		});
+		$.post("admin_betevent_a.php", {"set_round" : set_round, "set_game":set_game}, function(data){
+			$("#admin_area").html(data);
+		});
+	}
+
+	function open_kor_member(idx){
+		$("#kor_members").css("visibility","visible");
+		$("#member_select").val(idx);
+	}
+	function open_chn_member(idx){
+		$("#chn_members").css("visibility","visible");
+		$("#member_select").val(idx);
+	}
+	function select_kor_member(idx, uid, unick, urank){
+		var member_select = $("#member_select").val();
+
+		$("#name_1_"+member_select).val(uid);
+		$("#nick_1_"+member_select).val(unick);
+		$("#img_1_"+member_select).val(urank);
+		$("#kor_members").css("visibility","hidden");
+	}
+	function select_chn_member(idx, uid, unick, urank){
+		var member_select = $("#member_select").val();
+
+		$("#name_2_"+member_select).val(uid);
+		$("#nick_2_"+member_select).val(unick);
+		$("#img_2_"+member_select).val(urank);
+		$("#chn_members").css("visibility","hidden");
+	}
+</script>
+
+<table>
+	<tr>
+		<td valign="top">
+
+<table border="0" cellpadding="1" cellspacing="1" width="100%" height="100%">
+<?
+	for($j=1; $j<=5; $j++){
+	$team_pos =1;
+	$winA_pos = "winA_".$team_pos."_".$j;
+	$pointA_pos = "pointA_".$team_pos."_".$j;
+
+	$name = "name_".$team_pos."_".$j;
+	$nick = "nick_".$team_pos."_".$j;
+	$img = "img_".$team_pos."_".$j;
+?>
+	<tr>
+
+		<td align="center" width="100"><input type="checkbox" name="winA_<?=$team_pos?>_<?=$j?>" value="A" <? if($$winA_pos == "A"){echo "checked";}?> style="width:30px;"></td>
+		<td><select name="pointA_<?=$team_pos?>_<?=$j?>" id="pointA_<?=$team_pos?>_<?=$j?>" onchange="javascript:teamPoint('pointA_<?=$team_pos?>_<?=$j?>')">
+<? for($i=1;$i<=10;$i++){?>
+			<option value="<?=$i*10?>" <? if($$pointA_pos == $i*10){echo "selected";}?>><?=$i*10?>
+<?}?>
+			
+			</select></td>
+
+
+		<td><input type="text" id="name_1_<?=$j?>" name="name_1_<?=$j?>" value="<?=$$name?>" style="width:136px;" onclick="javascript:open_kor_member(<?=$j?>)" readonly><input type="hidden" id="nick_1_<?=$j?>" name="nick_1_<?=$j?>" value="<?=$$nick?>"><input type="hidden" id="img_1_<?=$j?>" name="img_1_<?=$j?>" value="<?=$$img?>"></td>
+		
+
+	</tr>
+<?}?>
+</table>
+<div id="kor_members" style="position:absolute;top:50px;left:50px;background-color:#fff;visibility:hidden;">
+<table border="0" cellpadding="1" cellspacing="1" bgcolor="dddddd">
+	<tr bgcolor="ffffff">
+		<td colspan="3" align="right" height="30"><span onclick="javascript:$('#kor_members').css('visibility','hidden');" style="font-size: 16px;font-weight:bold;cursor:pointer;">X</span>&nbsp;</td>
+	</tr>
+<? 
+	for($i=1;$i<=11;$i++){
+		$user_id = "user_id".$i;
+		$user_nick = 'user_nick'.$i;
+		$user_img = 'user_img'.$i;
+?>	
+<? if($i%3 == 1){?>	<tr bgcolor="ffffff" align="center" height="40"><?}?>
+
+		<td width="80" onclick="javascript:select_kor_member(<?=$i?>,'<?=$$user_id?>','<?=$$user_nick?>','<?=$$user_img?>')" style="cursor:pointer;"><?=$$user_id?></td>
+
+<? if($i%3==0){?>	</tr><?}?>
+<?}?>
+</table>		
+</div>
+
+			</td>
+			<td valign="top" align="center" width="70">
+				<table height="100%">
+					<tr height="36"><td onclick="javascript:event_view(1)" style="cursor:pointer;"><input type="button" value="1" style="width:30px;"></td></tr>
+					<tr height="36"><td onclick="javascript:event_view(2)" style="cursor:pointer;"><input type="button" value="2" style="width:30px;"></td></tr>
+					<tr height="36"><td onclick="javascript:event_view(3)" style="cursor:pointer;"><input type="button" value="3" style="width:30px;"></td></tr>
+					<tr height="36"><td onclick="javascript:event_view(4)" style="cursor:pointer;"><input type="button" value="4" style="width:30px;"></td></tr>
+					<tr height="36"><td onclick="javascript:event_view(5)" style="cursor:pointer;"><input type="button" value="5" style="width:30px;"></td></tr>
+				</table>
+			</td>
+			<td width="220">
+
+<table border="0" cellpadding="1" cellspacing="1" width="100%" height="100%">
+
+<?
+	for($j=1; $j<=5; $j++){
+	$team_pos =2;
+	$winB_pos = "winB_".$team_pos."_".$j;
+	$pointB_pos = "pointB_".$team_pos."_".$j;
+
+	$name = "name_".$team_pos."_".$j;
+	$nick = "nick_".$team_pos."_".$j;
+	$img = "img_".$team_pos."_".$j;
+?>
+	<tr>
+		<td><input type="text" id="name_2_<?=$j?>" name="name_2_<?=$j?>" value="<?=$$name?>" style="width:136px;" onclick="javascript:open_chn_member(<?=$j?>)" readonly><input type="hidden" id="nick_2_<?=$j?>" name="nick_2_<?=$j?>" value="<?=$$nick?>"><input type="hidden" id="img_2_<?=$j?>" name="img_2_<?=$j?>" value="<?=$$img?>"></td>
+		<td><select name="pointB_<?=$team_pos?>_<?=$j?>" id="pointB_<?=$team_pos?>_<?=$j?>" onchange="javascript:teamPoint2('pointB_<?=$team_pos?>_<?=$j?>')">
+<? for($i=1;$i<=10;$i++){?>
+			<option value="<?=$i*10?>" <? if($$pointB_pos == $i*10){echo "selected";}?>><?=$i*10?>
+<?}?>
+			
+			</select></td>
+
+
+		
+		<td align="center" width="100"><input type="checkbox" name="winB_<?=$team_pos?>_<?=$j?>" value="B" <? if($$winB_pos == "B"){echo "checked";}?> style="width:30px;"></td>
+
+	</tr>
+<?}?>
+</table>
+<div id="chn_members" style="position:absolute;top:50px;left:300px;background-color:#fff;visibility:hidden;">
+<table border="0" cellpadding="1" cellspacing="1" bgcolor="dddddd">
+	<tr bgcolor="ffffff">
+		<td colspan="4" align="right" height="30"><span onclick="javascript:$('#chn_members').css('visibility','hidden');" style="font-size: 16px;font-weight:bold;cursor:pointer;">X</span>&nbsp;</td>
+	</tr>
+<? 
+	for($i=1;$i<=28;$i++){
+		$cuser_id = "cuser_id".$i;
+		$cuser_nick = 'cuser_nick'.$i;
+		$cuser_img = 'cuser_img'.$i;
+?>	
+<? if($i%4 == 1){?>	<tr bgcolor="ffffff" align="center" height="40"><?}?>
+
+		<td width="80" onclick="javascript:select_chn_member(<?=$i?>,'<?=$$cuser_id?>','<?=$$cuser_nick?>','<?=$$cuser_img?>')" style="cursor:pointer;"><?=$$cuser_id?></td>
+
+<? if($i%4==0){?>	</tr><?}?>
+<?}?>
+</table>		
+</div>
+			</td>
+		</tr>
+	</table>
+<br><br>
+
+<div style="width:550px;text-align:center;"><input type="submit" value="확인" style="width:200px;height:40px"></div>
+
+</form>
+
+</td></tr>
+</table>
+
+
+		</td>
+		<td valign="top"><div id="event_area"></div></td>
+		<td>&nbsp;</td>
+		<td valign="top"><div id="admin_area"></div></td>
+	</tr>
+</table>
+
+<input type="hidden" id="member_select">
+<script>
+	function teamPoint(myselect){
+	
+		const select_id = myselect;
+		const other_id = select_id.replace("pointA_1","pointB_2");
+		const other_point = 100 - eval($("#"+select_id).val());
+		
+//		alert(other_point);
+		
+		$("#"+other_id).val(other_point).prop("selected", true);
+
+	}
+
+	function teamPoint2(myselect){
+	
+		const select_id = myselect;
+		const other_id = select_id.replace("pointB_2","pointA_1");
+		const other_point = 100 - eval($("#"+select_id).val());
+		
+//		alert(other_point);
+		
+		$("#"+other_id).val(other_point).prop("selected", true);
+
+	}
+</script>
+<iframe name="hiddenFrame" style="display:none" title="hiddenFrame"></iframe>
+</body>

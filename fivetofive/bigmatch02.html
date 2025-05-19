@@ -1,0 +1,120 @@
+<?
+	include "top.html";
+
+include "inc_round.php";
+
+?>
+		
+		<div class="bigm_conwrap conbg_sub">
+            <p class="sub_score sub_cheer">
+                <span class="score_title">나의 주간 응원점수</span>
+                <span class="score_num" id="score_num">0점</span>
+            </p>
+            <div class="sub_scorerule sub_cheer">
+                <a class="btn_rule_toggle" role="button" href="#" onclick="return false"><span class="txt">참여방법</span></a>
+                <div class="rule_notice" style="display:none;">
+                    <ul class="txt_rule">
+                        <li>이벤트 기간 중 매주 월요일 밤 9시에 열리는 한·중 5:5 빅매치 실시간 대국 방에서<br />베팅 또는 장미 응원을 통해 참가 가능</li>
+                        <li>한 구간에 5억 T포인트 베팅할 경우,<br />
+                        성공 시에는 응원점수 100점을, 실패 시에는 응원점수 50점을 획득할 수 있음.<br />점수 중복 획득 가능.</li>
+                        <li>한 구간에 100만 T포인트 이상 5억 T포인트 미만 베팅할 경우,<br />성공 시에는 응원점수 50점을, 실패 시에는 응원점수 20점을 획득할 수 있음.<br />점수 중복 획득 가능.</li>
+                        <li>한 구간에 장미 90개를 응원할 시 응원점수 10점을 획득할 수 있음.<br />점수 중복 획득 가능.</li>
+						<br>
+						<span style="color: #d9478a;font-family: 'NanumSquareNeo', sans-serif;font-weight: 900;font-size: 23px;line-height: 60px;text-indent: -18px;margin-left: 18px;">4월 29일(월)부터는 변경된 이벤트 조건으로 적용됩니다.<br></span>
+<li>100만 PT 이상 5억 PT 미만 → 1,000만 PT 이상 5억 PT 미만<br></li>
+<li>각 베팅 적중/미적중 시 지급 점수 변경</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bigm_con" id="bigm_con"></div>
+        </div>
+        <div class="bf_footerwrap">
+            <p>COPYRIGHT&copy; Com2uS TYGEM Corporation ALL RIGHTS RESERVED.</p>
+        </div>
+           
+    </div>
+    <a class="content_top" href="javascript:movePage('bigm_wrap');" id="content_top">
+        <span>TOP</span>
+    </a>
+            
+   
+<script type="text/javascript" src="//www.tygemgame.com/js/jquery.1.12.4.min.js"></script>
+
+<script>
+    
+    $(function() {
+        $(".btn_intro_popup").click(function() {
+            $(".intro_popup").css("display", "block")
+        });
+        $(".intro_popup .btn_popup_close").click(function() {
+            $(".intro_popup").css("display", "none")
+        });
+        $(".intro_popup .btn_bottom_close").click(function() {
+            $(".intro_popup").css("display", "none")
+        });
+        $(".btn_team_popup").click(function() {
+            $(".team_popup").css("display", "block")
+        });
+        $(".team_popup .btn_popup_close").click(function() {
+            $(".team_popup").css("display", "none")
+        });
+        $(".team_popup .btn_bottom_close").click(function() {
+            $(".team_popup").css("display", "none")
+        });
+        $(".tab_menu01").hover(function() {
+            $(".menu_mal01").css("opacity", "1");
+        }, function (){
+            $(".menu_mal01").css("opacity", "0");
+        });
+        $(".tab_menu02").hover(function() {
+            $(".menu_mal02").css("opacity", "1");
+        }, function (){
+            $(".menu_mal02").css("opacity", "0");
+        });
+        $(".tab_menu03").hover(function() {
+            $(".menu_mal03").css("opacity", "1");
+        }, function (){
+            $(".menu_mal03").css("opacity", "0");
+        });
+        $(".tab_menu04").hover(function() {
+            $(".menu_mal04").css("opacity", "1");
+        }, function (){
+            $(".menu_mal04").css("opacity", "0");
+        });
+        $(".tab_menu05").hover(function() {
+            $(".menu_mal05").css("opacity", "1");
+        }, function (){
+            $(".menu_mal05").css("opacity", "0");
+        });
+        $(".btn_rule_toggle").click(function() {
+            $(".rule_notice").slideToggle();
+        });
+        $(".btn_rule_toggle").click(function() {
+            $(".btn_rule_toggle").toggleClass("on");
+        });
+    });
+
+    
+function movePage(id) { //이동시 자연스럽게 움직이도록 애니메이션 추가
+	$('html, body').stop().animate({scrollTop: $('#' + id).offset().top}, 700);
+}
+</script>
+<?
+	$user_num = $_GET["user_num"];
+	if(!$user_num){
+		$user_num = "0";
+	}
+?>
+<script language='JavaScript'>
+<!--
+	function eventArea(round, game) {
+		$("#bigm_con").html("데이타 처리중입니다.");
+		$.post("live.php", {"round":round, "game":game, "user_num":<?=$user_num?>}, function(data){
+			$("#bigm_con").html(data);
+		});
+	}
+	eventArea(<?=$set_round?>);
+//-->
+</script>
+</body>
+</html>

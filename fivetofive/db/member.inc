@@ -1,0 +1,29 @@
+<?
+$user_id1 = '김채영 8단';
+$user_nick1 = 'KimCY1';
+$user_img1 = 'img_player_team01_1.png';
+$user_id2 = '목진석 9단';
+$user_nick2 = 'JSMok';
+$user_img2 = 'img_player_team01_2.png';
+$user_id3 = '원성진 9단';
+$user_nick3 = 'YuanSZhen';
+$user_img3 = 'img_player_team01_3.png';
+$user_id4 = '안조영 9단';
+$user_nick4 = 'AnJoYoung';
+$user_img4 = 'img_player_team01_4.png';
+$user_id5 = '윤준상 9단';
+$user_nick5 = 'JSYun';
+$user_img5 = 'img_player_team01_5.png';
+$user_id6 = '진시영 9단';
+$user_nick6 = 'JinsiYung';
+$user_img6 = 'img_player_team01_6.png';
+$user_id7 = '한웅규 9단';
+$user_nick7 = 'HanungGu';
+$user_img7 = 'img_player_team01_7.png';
+$user_id8 = '홍무진 6단';
+$user_nick8 = 'Hongmujin';
+$user_img8 = 'img_player_team01_8.png';
+$user_id9 = '홍성지 9단';
+$user_nick9 = 'HongSJi';
+$user_img9 = 'img_player_team01_9.png';
+?>

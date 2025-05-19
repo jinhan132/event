@@ -1,0 +1,100 @@
+<?
+header("Content-Type:text/html;charset=utf-8"); 
+
+
+include "../db/member.inc";
+include "../db/member2.inc";
+
+
+
+
+?>
+<head>
+<style>
+body{margin:10;padding:10}
+input, select {height:24px;}
+td{font-family:'굴림',Gulim,Helvetica,sans-serif;font-size:13px;color:#000}
+</style>
+
+<script>
+
+	function check_id(step){
+		var userId = $("#user_id"+step).val();
+
+		$.post("add_name.php", {"userid" : decodeURIComponent(userId), "userno":step }, function(data){
+
+			if(data == "no"){
+				alert("아이디 없음");
+			}
+			$("#view_txt").html(data);
+
+		});
+	}
+
+	function check_nick(step){
+		var usernick = $("#cuser_nick"+step).val();
+
+		$.post("add_nick.php", {"usernick" : usernick, "userno":step }, function(data){
+
+			if(data == "no"){
+				alert("닉네임 없음");
+			}
+			$("#view_txt").html(data);
+
+		});
+	}
+
+	function del_join(seq, userid,stime){
+		if(confirm(userid+" 삭제하시겠습니까?")){
+			$.post("del_id.php", {"seq" : seq }, function(data){
+
+				if(data == "delete_ok"){
+					alert("삭제되었습니다.");
+				}
+				click_date(stime);
+			});
+		}
+	}
+</script>
+
+<script type="text/javascript" src="/js/jquery-lastest.js"></script>
+</head>
+<body>
+
+<input type="button" value="선수관리" style="width:100px;height:40px;color:blue" onclick="javascript:location.href='members.html'">
+<input type="button" value="승부예측" style="width:100px;height:40px;" onclick="javascript:location.href='round.html'">
+<br><br>
+<form name="submit_form" method="post" action="members_process.php" target="hiddenFrame">
+
+<? 
+	for($i=1; $i<=9; $i++){
+		$user_id = "user_id".$i;
+		$user_nick = 'user_nick'.$i;
+		$user_rank = 'user_rank'.$i;
+?>
+<input type="button" value="<?=$i?>" style="color:blue; width:80px;height:22px;"> <input type="text" id="user_id<?=$i?>" name="user_id<?=$i?>" value="<?=$$user_id?>" placeholder="선수명" style="width:100px;height:22px;"><input type="button" value="+등록" onclick="javascript:check_id(<?=$i?>)">
+&nbsp;
+<input type="text" id="user_nick<?=$i?>" name="user_nick<?=$i?>" value="<?=$$user_nick?>" style="width:100px;"><input type="text" id="user_rank<?=$i?>" name="user_rank<?=$i?>" value="<?=$$user_rank?>" style="width:40px;">
+<br>
+<?}?>
+<input type="submit" value="저장" style="width:120px;height:30px;">
+</form>
+
+
+<form name="submit_form2" method="post" action="members2_process.php" target="hiddenFrame">
+
+<? 
+	for($i=1; $i<=18; $i++){
+		$cuser_id = "cuser_id".$i;
+		$cuser_nick = 'cuser_nick'.$i;
+		$cuser_rank = 'cuser_rank'.$i;
+?>
+<input type="button" value="<?=$i?>" style="color:red; width:80px;height:22px;"> <input type="text" id="cuser_nick<?=$i?>" name="cuser_nick<?=$i?>" value="<?=$$cuser_nick?>" placeholder="닉네임" style="width:100px;height:22px;"><input type="button" value="+등록" onclick="javascript:check_nick(<?=$i?>)" >
+&nbsp;
+<input type="text" id="cuser_id<?=$i?>" name="cuser_id<?=$i?>" value="<?=$$cuser_id?>" style="width:100px;"><input type="text" id="cuser_rank<?=$i?>" name="cuser_rank<?=$i?>" value="<?=$$cuser_rank?>" style="width:40px;">
+<br>
+<?}?>
+<input type="submit" value="저장" style="width:120px;height:30px;">
+</form>
+<div id="view_txt"></div>
+<iframe name="hiddenFrame" style="display:none" title="hiddenFrame"></iframe>

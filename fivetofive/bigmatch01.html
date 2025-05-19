@@ -1,0 +1,136 @@
+<?
+	include "top.html";
+
+
+include "inc_round.php";
+
+
+@include "./db/game_".$set_round."_".$set_game.".inc";
+
+
+	$num1 = 0;
+if($s_uid != ""){
+	include "/home/www/inc/db_connect.inc";
+	
+	$eventnum1 = "fivetofive2024_bet";
+	$eventnum2 = "fivetofive2024_admin";
+
+	$sql = "select IFNULL(sum(num1),0) from tygem_eventlist where (eventnum='$eventnum1' or eventnum='$eventnum2')  and user_num=$s_unum and (writeday>='$event_start 00:00:00' and writeday <= '$event_end 23:59:59') ";
+	$query = mysql_query($sql, $connect);
+	$data = mysql_fetch_array($query);
+	$num1 = $data[0];
+mysql_close($connect);
+}
+
+?>
+        <input type="hidden" id="box_num_text" value="<?=$num1?>">
+		<div class="bigm_conwrap conbg_sub">
+            <p class="sub_score sub_bet">
+                <span class="score_title">나의 주간 예측점수</span>
+                <span class="score_num"><?=number_format($num1)?>점</span>
+            </p>
+            <div class="sub_scorerule sub_bet">
+                <!-- onclick="return false"은 href="#" 클릭시 맨 위로 가는 현상 방지 -->
+                <a class="btn_rule_toggle" role="button" href="#" onclick="return false"><span class="txt">점수설명 및 참여방법</span></a>
+                <div class="rule_notice" style="display:none;">
+                    <ul class="txt_tip">
+                        <li>예측 참여 시 100점 획득!</li>
+                        <li>승리팀 예측 적중 시 50점 획득!</li>
+                        <li>1~5국 승자 예측 적중 시 10~90점 획득!</li>
+                    </ul>
+                    <ul class="txt_rule">
+                        <li>매주 화요일 오더 발표 이후 승부 예측 참여 가능</li>
+                        <li>매주 월요일 오후 8시까지 승부 예측 참여 가능<br />
+                            (대국은 월요일 오후 9시 시작)</li>
+                        <li>승리팀과 1~5국 승자를 예측하여 제출</li>
+                        <li>승/패는 대국일 다음날 업데이트되며, 업데이트 후 예측점수가 반영됨.</li></ul>
+                </div>
+            </div>
+
+			<div class="bigm_con" id="bigm_con">
+			</div>
+        </div>
+        <div class="bf_footerwrap">
+            <p>COPYRIGHT&copy; Com2uS TYGEM Corporation ALL RIGHTS RESERVED.</p>
+        </div>
+           
+    </div>
+    <a class="content_top" href="javascript:movePage('bigm_wrap');" id="content_top">
+        <span>TOP</span>
+    </a>
+            
+   
+<script type="text/javascript" src="//www.tygemgame.com/js/jquery.1.12.4.min.js"></script>
+
+<script>
+    
+    $(function() {
+        $(".btn_intro_popup").click(function() {
+            $(".intro_popup").css("display", "block")
+        });
+        $(".intro_popup .btn_popup_close").click(function() {
+            $(".intro_popup").css("display", "none")
+        });
+        $(".intro_popup .btn_bottom_close").click(function() {
+            $(".intro_popup").css("display", "none")
+        });
+        $(".btn_team_popup").click(function() {
+            $(".team_popup").css("display", "block")
+        });
+        $(".team_popup .btn_popup_close").click(function() {
+            $(".team_popup").css("display", "none")
+        });
+        $(".team_popup .btn_bottom_close").click(function() {
+            $(".team_popup").css("display", "none")
+        });
+        $(".tab_menu01").hover(function() {
+            $(".menu_mal01").css("opacity", "1");
+        }, function (){
+            $(".menu_mal01").css("opacity", "0");
+        });
+        $(".tab_menu02").hover(function() {
+            $(".menu_mal02").css("opacity", "1");
+        }, function (){
+            $(".menu_mal02").css("opacity", "0");
+        });
+        $(".tab_menu03").hover(function() {
+            $(".menu_mal03").css("opacity", "1");
+        }, function (){
+            $(".menu_mal03").css("opacity", "0");
+        });
+        $(".tab_menu04").hover(function() {
+            $(".menu_mal04").css("opacity", "1");
+        }, function (){
+            $(".menu_mal04").css("opacity", "0");
+        });
+        $(".tab_menu05").hover(function() {
+            $(".menu_mal05").css("opacity", "1");
+        }, function (){
+            $(".menu_mal05").css("opacity", "0");
+        });
+        $(".btn_rule_toggle").click(function() {
+            $(".rule_notice").slideToggle();
+        });
+        $(".btn_rule_toggle").click(function() {
+            $(".btn_rule_toggle").toggleClass("on");
+        });
+    });
+
+    
+function movePage(id) { //이동시 자연스럽게 움직이도록 애니메이션 추가
+	$('html, body').stop().animate({scrollTop: $('#' + id).offset().top}, 700);
+}
+</script>
+<script language='JavaScript'>
+<!--
+	function eventArea(round, game) {
+
+		$.post("event.php", {"round":round, "game":game}, function(data){
+			$("#bigm_con").html(data);
+		});
+	}
+	eventArea(<?=$set_round?>);
+//-->
+</script>
+</body>
+</html>

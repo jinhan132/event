@@ -1,0 +1,130 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+	include "/home/www/inc/define.h";
+	include "$docPath/inc/session.inc";
+
+	$page_num = $_POST["page_num"];
+	$std_date = $_POST["std_date"];
+
+	$week_bet_prize[1] = "30억 PT";
+	$week_bet_prize[2] = "20억 PT";
+	$week_bet_prize[3] = "10억 PT";
+	$week_bet_prize[4] = "9억 PT";
+	$week_bet_prize[5] = "8억 PT";
+	$week_bet_prize[6] = "7억 PT";
+	$week_bet_prize[7] = "7억 PT";
+	$week_bet_prize[8] = "7억 PT";
+	$week_bet_prize[9] = "7억 PT";
+	$week_bet_prize[10] = "7억 PT";
+	$week_bet_prize[11] = "5억 PT";
+	$week_bet_prize[12] = "5억 PT";
+	$week_bet_prize[13] = "5억 PT";
+	$week_bet_prize[14] = "5억 PT";
+	$week_bet_prize[15] = "5억 PT";
+	$week_bet_prize[16] = "3억 PT";
+	$week_bet_prize[17] = "3억 PT";
+	$week_bet_prize[18] = "3억 PT";
+	$week_bet_prize[19] = "3억 PT";
+	$week_bet_prize[20] = "3억 PT";
+
+	$week_bet_prize[21] = "2억 PT";
+	$week_bet_prize[22] = "2억 PT";
+	$week_bet_prize[23] = "2억 PT";
+	$week_bet_prize[24] = "2억 PT";
+	$week_bet_prize[25] = "2억 PT";
+	$week_bet_prize[26] = "2억 PT";
+	$week_bet_prize[27] = "2억 PT";
+	$week_bet_prize[28] = "2억 PT";
+	$week_bet_prize[29] = "2억 PT";
+	$week_bet_prize[30] = "2억 PT";
+	$week_bet_prize[31] = "1억 PT";
+	$week_bet_prize[32] = "1억 PT";
+	$week_bet_prize[33] = "1억 PT";
+	$week_bet_prize[34] = "1억 PT";
+	$week_bet_prize[35] = "1억 PT";
+	$week_bet_prize[36] = "1억 PT";
+	$week_bet_prize[37] = "1억 PT";
+	$week_bet_prize[38] = "1억 PT";
+	$week_bet_prize[39] = "1억 PT";
+	$week_bet_prize[40] = "1억 PT";
+
+
+
+	include "/home/www/inc/db_connect.inc";
+
+	$num1 = 0;
+	$eventnum1 = "fivetofive2024_live";
+	$eventnum2 = "fivetofive2024_bet";
+	$eventnum3 = "fivetofive2024_admin";
+	$eventnum4 = "fivetofive2024_store";
+
+
+	$sql = "select user_id, sum(num1) from tygem_eventlist where (eventnum='$eventnum1' or eventnum='$eventnum2' or eventnum='$eventnum3' or eventnum='$eventnum4' ) and user_id not like 'bet-%'  group by user_num order by 2 desc";
+	$query = mysql_query($sql, $connect);
+	$i = 1;
+	while($data = mysql_fetch_array($query)){
+		$total_id[$i] = $data[0];
+		$total_num[$i] = $data[1];
+		$i++;
+	}
+
+	
+mysql_close($connect);
+
+	$page_size = $page_num * 20 -20;
+	$start_num = $page_size + 1;
+	$end_num = $page_num * 20;
+
+
+
+?>
+                    <p class="table_top type_total"><span>통합 랭킹</span></p>
+                    <div class="table_date">
+                        <span>집계기간 : 2024. 04. 16 ~ 05. 20</span>
+                    </div>
+                    <div class="rank_tablebox">
+                        <table class="rank_table">
+                            <colgroup>
+                                <col width="52px">
+                                <col width="157x">
+                                <col width="133px">
+                                <col width="116px">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th>순위</th>
+                                    <th>아이디</th>
+                                    <th><span class="rank_totaltxt">누적 통합점수</span></th>
+                                    <th>상금</th>
+                                </tr>
+<? for($i=$start_num; $i<=$end_num; $i++){?>     							
+							<tr>
+								<td><? if($i<=5){?><span class="num_top num_rank0<?=$i?>"><?=$i?></span><?}else{?><?=$i?><?}?></td>
+								<td><?=iconv("euc-kr","utf-8",$total_id[$i])?></td>
+								<td><?=number_format($total_num[$i])?></td>
+								<td><?=$week_bet_prize[$i]?></td>
+							</tr>
+<?}?>	                                
+								
+                            </tbody>
+                        </table>
+                        <p class="bigm_rank_page">
+
+<?
+	if($page_num == 1){
+		$before_page = "<button type='button' class='btn_rank_prev no_btn' onclick=''><span>이전</span></button>";
+		$after_page = "<button type='button' class='btn_rank_next' onclick=\"javascript:total_rank(2,'$std_date')\"><span>다음</span></button>";
+	}else if($page_num == 25){
+		$before_page = "<button type='button' class='btn_rank_prev' onclick=\"javascript:total_rank(24,'$std_date')\"><span>이전</span></button>";
+		$after_page = "<button type='button' class='btn_rank_next no_btn' onclick=''><span>다음</span></button>";
+	}else{
+		$before_num = $page_num - 1;
+		$after_num = $page_num + 1;
+		$before_page = "<button type='button' class='btn_rank_prev' onclick=\"javascript:total_rank($before_num,'$std_date')\"><span>이전</span></button>";
+		$after_page = "<button type='button' class='btn_rank_next' onclick=\"javascript:total_rank($after_num,'$std_date')\"><span>다음</span></button>";
+	}
+		echo $before_page;
+		echo $after_page;
+?>		
+                        </p>
+                    </div>

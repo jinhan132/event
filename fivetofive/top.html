@@ -1,0 +1,167 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+
+	include "/home/www/inc/define.h";
+	include "$docPath/inc/session.inc";
+
+	include "/home/www/pub/func/Encryption_fc.inc";
+
+	$sCode = "tygemLogin";
+
+	$sitecode = 1000;
+	$sText = $s_uid.",".$s_upasswd;
+
+	$tygemrun = EncryptionStr2013($sText, $sCode);
+
+	$tygemrun = $sitecode.$tygemrun;
+
+	$php_self = basename($_SERVER['PHP_SELF']);
+?>
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+    <meta name="description" content="대한민국 1위 인터넷 바둑사이트! 타이젬! ">
+    <meta name="apple-mobile-web-app-title" content="TYGEM " />
+    <meta property='og:type' content="website" />
+    <meta property="og:title" content="매주 월요일 오후 9시! 한&#183;중 5&#58;5 빅매치" />
+    <meta property="og:description" content="대한민국 1위 인터넷 바둑사이트! 타이젬! ">
+    <meta property="og:image" content="https://www.tygem.com/title.jpg" />
+    <meta property="og:url" content="https://service.tygem.com/event/2024/fivetofive/" />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="매주 월요일 오후 9시! 한&#183;중 5&#58;5 빅매치" />
+    <meta name="twitter:description" content="대한민국 1위 인터넷 바둑사이트! 타이젬! ">
+    <meta name="twitter:image" content="//www.tygem.com/title.jpg">
+    <meta name="twitter:domain" content="타이젬">
+    <meta name="twitter:url" content="https://service.tygem.com/event/2024/fivetofive/" />
+    <link rel="shortcut icon" type="image/x-icon" href="//www.tygem.com/favicon.png?1" />
+    <link rel="stylesheet" href="//img.tygem.com/images/event/20240403/css/bigmatch.css?v=5" type="text/css">
+<style>
+.player_name {
+    margin-top: 14px;
+    font-family: 'NanumSquareNeo', sans-serif;
+    font-weight: 800;
+    font-size: 29px;
+    color: #2f312d;
+}
+.intro_popup .btn_bottom_close {margin: 50px auto 0;}
+</style>
+    <title>매주 월요일 오후 9시! 한&#183;중 5&#58;5 빅매치</title>
+	<script type="text/javascript" src="/js/googleAnalytics.js"></script>
+    <script type="text/javascript" src="//api.tygem.com/api/common/event_header.js"></script>
+	<script type="text/javascript" src="/js/jquery-lastest.js"></script>
+
+
+<script type="text/javascript" src="//www.tygem.com/js/client/protocolcheck.js"></script>
+<script>
+	function setGameStart(){
+		window.protocolCheck('tygemrun:<?=$tygemrun?>', function () {
+			alert("타이젬바둑이 설치되지 않았습니다.\n설치 후 다시 시도해주세요");
+		});
+	}
+</script>    
+</head>
+
+<body>
+   
+    <div id="bigm_wrap">
+        <div class="bigm_topwrap">
+            <div class="top_btn">
+                <a href="//download.tygem.com/down_korea/service/setup/TygemBadukSetup.exe" class="top_download"><span class="top_download_txt">대국실 다운로드</span></a>
+                <a href="javascript:setGameStart();" class="top_go"><span class="top_go_txt">대국실 입장</span></a>
+            </div>
+            <div class="top_title">
+                <p class="bf_gnb_logo"><span>매주 월요일 오후 9시! 한중 5:5 빅매치</span></p>
+                <p class="top_title_txt"><span>승부예측 </span>응원이벤트</p>
+            </div>
+            <div class="intro_popup">
+                <div class="intro_top">
+                    <p class="popup_title">대회 안내</p>
+                    <button class="btn_popup_close"><span>닫기</span></button>
+                </div>
+                <div class="intro_con">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>1. 참가팀</th>
+                                <td>한국 상록수 연구실(9명), 중국 멍타이링 도장(20명)</td>
+                            </tr>
+                            <tr>
+                                <th>2. 대국 개시 시각</th>
+                                <td>매주 월요일 오후 9시</td>
+                            </tr>
+                            <tr>
+                                <th>3. 제한 시간</th>
+                                <td>각자 10분, 추가시간 20초(피셔 방식)</td>
+                            </tr>
+                            <tr>
+                                <th>4. 대국 방식</th>
+                                <td>오더에 따라 한·중 5:5로 대국 진행<br />월요일 오후 9시에 5대국 동시 진행</td>
+                            </tr>
+                            <tr>
+                                <th>5. 오더 제출</th>
+                                <td>매주 화요일 오후 2시까지</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn_bottom_close">닫기</button>
+                </div>
+            </div>
+            <div class="team_popup" style="display:none;">
+                <div class="team_top">
+                    <p class="popup_title">팀 소개</p>
+                    <button class="btn_popup_close"><span>닫기</span></button>
+                </div>
+                <div class="team_con">
+                    <div class="team_area">
+                        <div class="team_box">
+                            <p class="team_name">상록수 연구실</p>
+                            <p class="team_desc">상록수 연구실은 목진석 9단과 안조영 9단이 열심히<br />
+                                공부하는 연구실을 만들기 위해 창설하였으며,<br />
+                                가입 첫 번째 조건은 열심히 공부하는 기사입니다.<br />
+                                30대 이상의 기사들이 주를 이루고 있으나, 올 2월<br />
+                                김채영 8단이 신규 가입하여 연구실에<br />
+                                활력을 불어넣고 있습니다.</p>
+                            <div class="team_player">
+                                <p>김채영 8단, 목진석 9단, 원성진 9단, 안조영 9단, 윤준상 9단, 진시영 9단, 한웅규 9단, 홍무진 6단, 홍성지 9단</p>
+                            </div>
+                        </div>
+                        <div class="team_box">
+                            <p class="team_name">멍타이링 도장</p>
+                            <p class="team_desc">멍타이링 도장은 2021년에 오픈하였으며, 주로 입단 지망생
+                                들을 가르치고 있습니다.</p>
+                            <div class="team_player">
+                                <p>천정쉰 8단, 항샤오퉁 2단, 썬페이란 7단, <br>쉐관화 6단, 리천승 6단, 정자이샹 5단, 왕슈오 5단, 천위선 6단, 황신 6단, 천이춘 5단, 왕추쉬안 4단, 류치펑 5단, 저우즈이 4단, 쩡위안하이 4단, 청지아예 4단, 루민취안 6단, 리샤오시 5단, <br>천이밍 4단, 천하오신 6단, 루리옌 5단, <br>한주오란 3단, 양원카이 2단, 왕원충 1단, <br>장멍야오 3단, 웨이신통 3단, 천만치 2단</p>
+                            </div>
+                        </div>
+						<!--<p class="team_plus">천하오신 6단 / 루리옌 5단 선수가 팀 목록에 추가되었습니다.</p>-->
+                    </div>
+                    <button type="button" class="btn_bottom_close">닫기</button>
+                </div>
+            </div>
+            <div class="top_popup_btn">
+                <button type="button" class="btn_intro_popup"><span>대회 안내</span></button>
+                <button type="button" class="btn_team_popup"><span>팀 소개</span></button>
+            </div>
+            <p class="top_date"><span>진행기간 : </span>2024년 4월 16일(화) ~ 5월 20일(월)</p>
+        </div>
+        <ul class="bigm_menu">
+            <div class="inner">
+                <ul class="top_menu">
+                    <li class="tab_menu01<? if($php_self == 'bigmatch01.html'){?> menu_on<?}?>"><a href="bigmatch01.html" class="menu_txt">승부예측</a></li>
+                    <li class="tab_menu02<? if($php_self == 'bigmatch02.html'){?> menu_on<?}?>"><a href="bigmatch02.html" class="menu_txt">실시간 응원</a></li>
+                    <li class="tab_menu03<? if($php_self == 'bigmatch03.html'){?> menu_on<?}?>"><a href="bigmatch03.html" class="menu_txt">상록수 상점</a></li>
+                    <li class="tab_menu04<? if($php_self == 'bigmatch04.html'){?> menu_on<?}?>"><a href="bigmatch04.html" class="menu_txt">통합 랭킹전</a></li>
+                    <li class="tab_menu05<? if($php_self == 'bigmatch05.html'){?> menu_on<?}?>"><a href="bigmatch05.html" class="menu_txt">추첨 이벤트</a></li>
+                </ul>
+                <div class="menu_malbox">
+                    <p class="menu_mal menu_mal01">한·중 5:5 빅매치의 승부를 예측하고<br />예측점수를 획득하자!</p>
+                    <p class="menu_mal menu_mal02">한·중 5:5 빅매치 경기를<br /><strong>실시간</strong>으로 응원하자!<span class="menu_mal_mini">※ 사전베팅방 제외</span></p>
+                    <p class="menu_mal menu_mal03">상록수 연구실의 한국 기사들을<br />응원하고 상록수점수를 획득하자!</p>
+                    <p class="menu_mal menu_mal04">이벤트 기간동안 각 점수를<br />합산하여 통합점수 랭킹전 진행!</p>
+                    <p class="menu_mal menu_mal05">응원 아바타 구매해주신 분들께<br />추첨을 통해 푸짐한 선물을!</p>
+                </div>
+            </div>
+        </ul>

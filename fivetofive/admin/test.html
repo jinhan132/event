@@ -1,0 +1,57 @@
+<?
+
+	$ip = $_SERVER["REMOTE_ADDR"];
+	$eventnum = "fivetofive202404_live";
+
+	include "/home/www/inc/db_connect_11.inc";
+
+	$black_id = iconv("utf-8","euc-kr","명국감상흑2");
+	$white_id = iconv("utf-8","euc-kr","명국감상백2");
+
+	$sql = "select * from bet_game_9D, bet_list_rank where bet_game_9D.game_seq = bet_list_rank.game_seq and bet_game_9D.black_id in ('$black_id') and bet_game_9D.white_id in ('$white_id') and (bet_game_9D.game_time>='2024-03-27 00:00:00' and bet_game_9D.game_time<='2024-03-27 23:59:59') and bet_list_rank.ccode = 0 limit 10";
+
+	$query = mysql_query($sql, $connect);
+	
+	while($data = mysql_fetch_array($query)){
+		
+		$game_result = $data["game_result"];
+		$user_num = $data["user_num"];
+		$user_id = $data["user_id"];
+		$bet_color = $data["bet_color"];
+		$bet_money = $data["bet_money"];
+		$rose_cnt = $data["rose_cnt"];
+
+
+	
+		$sql_in = "";
+		if($bet_money >= 500000000){
+			if($game_result == $bet_color){
+				$field_value = "data11";
+				$data_num = 100;
+			}else{
+				$field_value = "data12";
+				$data_num = 50;
+			}
+
+			$sql_in = "insert into tygem_eventlist(eventnum, user_num, user_id, ip, writeday, $field_value, num1) values ('$eventnum', $user_num, '$user_id', '$ip', now(), '1', $data_num)";
+		}else if($bet_money >= 1000000 && $bet_money < 500000000){
+			if($game_result == $bet_color){
+				$field_value = "data13";
+				$data_num = 50;
+			}else{
+				$field_value = "data14";
+				$data_num = 20;
+			}
+			$sql_in = "insert into tygem_eventlist(eventnum, user_num, user_id, ip, writeday, $field_value, num1) values ('$eventnum', $user_num, '$user_id', '$ip', now(), '1', $data_num)";
+		}
+
+echo $sql_in."<br>";
+
+		if($rose_cnt >= 90){
+			$sql_in = "insert into tygem_eventlist(eventnum, user_num, user_id, ip, writeday, data15, num1) values ('$eventnum', $user_num, '$user_id', '$ip', now(), '1', 10)";
+echo $sql_in."<br>";
+		}
+
+	}
+
+?>

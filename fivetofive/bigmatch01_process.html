@@ -1,0 +1,72 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+	include "/home/www/inc/define.h";
+	include "$docPath/inc/session.inc";
+
+	include "/home/www/inc/db_connect.inc";
+
+
+	$eventnum = "fivetofive2024_bet";
+
+	$ip = $_SERVER["REMOTE_ADDR"];
+
+if($s_uid == ""){
+	exit;
+}
+
+if( strpos($_SERVER["HTTP_REFERER"],"service.tygem.com/event/2024/fivetofive/bigmatch01.html") > 0 ){
+}else{
+	exit;
+}
+
+	$set_round = $_POST["set_round"];
+	$set_game = $_POST["set_game"];
+	$myselect = $_POST["myselect"];
+
+if($set_round=="" || is_numeric($set_round)==false){
+	exit;
+}
+if($set_game=="" || is_numeric($set_game)==false){
+	exit;
+}
+if(strlen($myselect) != 6){
+	exit;
+}
+	
+
+	@include "./db/game_".$set_round."_".$set_game.".inc";
+
+	$game_date = $game_date." 20:00:00";
+
+ if($game_date >= date("m월d일 H:i")){
+ }else{
+	exit;
+ }
+
+	$sql = "select count(*) from tygem_eventlist where eventnum='$eventnum' and user_num=$s_unum and data2='$set_round' and data3 ='$set_game'";
+	$query = mysql_query($sql, $connect);
+	$data = mysql_fetch_array($query);
+	if($data[0] > 0){
+?><script>alert("이미 참여");</script><?
+		exit;
+	}
+
+
+	$num1 = 100;
+
+	$sql_in = "insert into tygem_eventlist(eventnum, user_num, user_id, ip, writeday, data1, data2, data3, num1) values ('$eventnum', $s_unum, '$s_uid', '$ip', now(), '$myselect', '$set_round', '$set_game',  $num1)";
+
+
+//	echo $sql_in;
+
+	$query_in = mysql_query($sql_in, $connect);
+
+
+mysql_close($connect);
+?>
+<script type="text/javascript" src="/js/comma3.js"></script>
+<script>
+parent.eventArea(<?=$set_round?>,<?=$set_game?>);
+	var my_box_num = parseInt(parent.document.getElementById('box_num_text').value) + parseInt(<?=$num1?>);
+	parent.document.getElementById('box_num').innerHTML = comma3(my_box_num) + "점";
+</script>

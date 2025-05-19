@@ -1,0 +1,255 @@
+<?
+	include "top.html";
+
+
+	include "/home/www/inc/db_connect.inc";
+
+
+	$num1 = 0;
+	$eventnum1 = "fivetofive2024_live";
+	$eventnum2 = "fivetofive2024_bet";
+	$eventnum3 = "fivetofive2024_admin";
+	$eventnum4 = "fivetofive2024_store";
+
+if($s_uid != ""){
+	
+if( date("Y-m-d") < "2024-04-23"){
+	$set_game = 1;
+	$event_week_date = "2024-04-01";
+} else if(date("Y-m-d") >= "2024-04-23" && date("Y-m-d") <= "2024-04-29"){
+	$set_game = 2;
+	$event_week_date = "2024-04-23";
+} else if(date("Y-m-d") >= "2024-04-30" && date("Y-m-d") <= "2024-05-06"){
+	$set_game = 3;
+	$event_week_date = "2024-04-30";
+} else if(date("Y-m-d") >= "2024-05-07"){
+	$set_game = 4;
+	$event_week_date = "2024-05-07";
+}
+
+	$event_week_date = date('Y-m-d 00:00:00',$t);
+
+	$sql = "select sum(num1) from tygem_eventlist where (eventnum='$eventnum1' or eventnum='$eventnum2' or eventnum='$eventnum3' or eventnum='$eventnum4' )  and user_num=$s_unum and writeday>='$event_week_date'";
+	$query = mysql_query($sql, $connect);
+	$data = mysql_fetch_array($query);
+	$weekbet_mynum1 = $data[0];
+
+	$sql = "select sum(num1) from tygem_eventlist where (eventnum='$eventnum1' or eventnum='$eventnum2' or eventnum='$eventnum3' or eventnum='$eventnum4')  and user_num=$s_unum and writeday>='$event_start'";
+	$query = mysql_query($sql, $connect);
+	$data = mysql_fetch_array($query);
+	$week_mynum1 = $data[0];
+
+}
+
+
+if($weekbet_mynum1 > 0){
+	$sql = "select user_id, sum(num1) from tygem_eventlist where (eventnum='$eventnum1' or eventnum='$eventnum2' or eventnum='$eventnum3' or eventnum='$eventnum4' ) and writeday>='$event_week_date' group by user_id order by 2 desc";
+	$query = mysql_query($sql, $connect);
+	$weekbet_rank = 1;
+	while($data = mysql_fetch_array($query)){
+		if($data[1] > $weekbet_mynum1){
+			$weekbet_rank++;
+		}else{
+			break;
+		}
+	}
+}
+
+if($week_mynum1 > 0){
+	$sql = "select user_id, sum(num1) from tygem_eventlist where (eventnum='$eventnum1' or eventnum='$eventnum2' or eventnum='$eventnum3' or eventnum='$eventnum4') and writeday>='$event_start' group by user_id order by 2 desc";
+	$query = mysql_query($sql, $connect);
+	$week_rank = 1;
+	while($data = mysql_fetch_array($query)){
+		if($data[1] > $week_mynum1){
+			$week_rank++;
+		}else{
+			break;
+		}
+	}
+}
+	
+mysql_close($connect);
+
+?>
+        <div class="bigm_conwrap conbg_sub">
+            <p class="sub_score sub_total">
+                <span class="score_title">나의 주간 통합 점수</span>
+                <span class="score_num"><?=number_format($week_mynum1)?>점</span>
+            </p>
+            <div class="total_scorebox">
+                <p class="total_title">이벤트 기간 동안 각 부분별 점수를 합산하여 <strong>통합점수 랭킹전 진행!</strong></p>
+                <div class="total_box">
+                   <p class="score_bet">예측 점수</p>
+                   <p class="ico_math">+</p>
+                   <p class="score_cheer">응원 점수</p>
+                   <p class="ico_math">+</p>
+                   <p class="score_shop">상록수<br />점수</p>
+                   <p class="ico_math">=</p>
+                   <p class="score_total">통합점수</p>
+                </div>
+            </div>
+            <div class="total_myrank">
+                <div class="inner">
+                    <p class="myrank_title"><span>나의 현재 순위</span></p>
+                    <div class="myrank_box">
+                        <table class="myrank_table">
+                            <colgroup>
+                                <col width="146px">
+                                <col width="144px">
+                                <col width="168px">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th></th>
+                                    <th>누적 주간<span class="myrank_weekendtxt">점수</span></th>
+                                    <th>누적 주간<span class="myrank_weekendtxt">랭킹</span></th>
+                                </tr>
+                                <tr>
+                                    <td>나의 랭킹</td>
+                                    <td><span><?=number_format($weekbet_mynum1)?>점</span></td>
+                                    <td><span><?=number_format($weekbet_rank)?>위</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="myrank_table">
+                            <colgroup>
+                                <col width="146px">
+                                <col width="144px">
+                                <col width="168px">
+                            </colgroup>
+                            <tbody><tr>
+                                <th></th>
+                                <th>누적 통합<span class="myrank_totaltxt">점수</span></th>
+                                <th>누적 통합<span class="myrank_totaltxt">랭킹</span></th>
+                            </tr>
+                            <tr>
+                                <td>나의 랭킹</td>
+                                <td><span><?=number_format($week_mynum1)?>점</span></td>
+                                <td><span><?=number_format($week_rank)?>위</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="total_rank">
+                <div class="rank_box" id="week_rank_box"></div>
+                <div class="rank_box" id="total_rank_box"></div>
+            </div>
+        </div>
+        <div class="bf_footerwrap">
+            <p>COPYRIGHT&copy; Com2uS TYGEM Corporation ALL RIGHTS RESERVED.</p>
+        </div>
+           
+    </div>
+    <a class="content_top" href="javascript:movePage('bigm_wrap');" id="content_top">
+        <span>TOP</span>
+    </a>
+            
+   
+<script type="text/javascript" src="//www.tygemgame.com/js/jquery.1.12.4.min.js"></script>
+
+<script>
+    
+    $(function() {
+        $(".btn_intro_popup").click(function() {
+            $(".intro_popup").css("display", "block")
+        });
+        $(".intro_popup .btn_popup_close").click(function() {
+            $(".intro_popup").css("display", "none")
+        });
+        $(".intro_popup .btn_bottom_close").click(function() {
+            $(".intro_popup").css("display", "none")
+        });
+        $(".btn_team_popup").click(function() {
+            $(".team_popup").css("display", "block")
+        });
+        $(".team_popup .btn_popup_close").click(function() {
+            $(".team_popup").css("display", "none")
+        });
+        $(".team_popup .btn_bottom_close").click(function() {
+            $(".team_popup").css("display", "none")
+        });
+        $(".tab_menu01").hover(function() {
+            $(".menu_mal01").css("opacity", "1");
+        }, function (){
+            $(".menu_mal01").css("opacity", "0");
+        });
+        $(".tab_menu02").hover(function() {
+            $(".menu_mal02").css("opacity", "1");
+        }, function (){
+            $(".menu_mal02").css("opacity", "0");
+        });
+        $(".tab_menu03").hover(function() {
+            $(".menu_mal03").css("opacity", "1");
+        }, function (){
+            $(".menu_mal03").css("opacity", "0");
+        });
+        $(".tab_menu04").hover(function() {
+            $(".menu_mal04").css("opacity", "1");
+        }, function (){
+            $(".menu_mal04").css("opacity", "0");
+        });
+        $(".tab_menu05").hover(function() {
+            $(".menu_mal05").css("opacity", "1");
+        }, function (){
+            $(".menu_mal05").css("opacity", "0");
+        });
+    });
+    
+    $(function() {
+        $(".btn_bonus_popup").click(function() {
+            $(".bonus_popup").css("display", "block")
+        });
+        $(".bonus_popup .btn_popup_close").click(function() {
+            $(".bonus_popup").css("display", "none")
+        });
+    });
+    
+    // 예측주간랭킹 기간선택
+    $(".bigm_selectbtn").on("click", function(){
+        if($(".bigm_selectbox").hasClass("open"))
+            $(".bigm_selectbox").removeClass("open");
+        else
+            $(".bigm_selectbox").addClass("open");
+    });
+
+    // 예측주간 셀렉트 닫기
+    $("body").on("click", function (e){
+        // Family Site
+        if($("#bigm_selectbox").hasClass("open")){
+            if(!$("#bigm_selectbox").has(e.target).length)
+                $("#bigm_selectbox").removeClass("open");
+        }
+    });
+
+    function weekbet_click(){
+		if($(".bigm_selectbox").hasClass("open"))
+			$(".bigm_selectbox").removeClass("open");
+		else
+			$(".bigm_selectbox").addClass("open");
+	}
+function movePage(id) { //이동시 자연스럽게 움직이도록 애니메이션 추가
+	$('html, body').stop().animate({scrollTop: $('#' + id).offset().top}, 700);
+}
+</script>
+
+<script language='JavaScript'>
+<!--
+	function week_rank(page_num, std_date) {
+		$.post("week_rank.html", {"page_num":page_num, "std_date":std_date}, function(data){
+			$("#week_rank_box").html(data);
+		});
+	}
+	function total_rank(page_num, std_date) {
+		$.post("total_rank.html", {"page_num":page_num, "std_date":std_date}, function(data){
+			$("#total_rank_box").html(data);
+		});
+	}
+	week_rank(1);
+	total_rank(1);
+//-->
+</script>
+
+</body>
+</html>

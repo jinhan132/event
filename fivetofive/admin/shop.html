@@ -1,0 +1,48 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+
+include "../db/member.inc";
+
+?>
+<head>
+<style>
+body{margin:10;padding:10}
+input, select {height:24px;}
+td{font-family:'굴림',Gulim,Helvetica,sans-serif;font-size:13px;color:#000}
+</style>
+<script language="javascript" src="/js/calendar.js"></script>
+<script type="text/javascript" src="/js/jquery-lastest.js"></script>
+<script>
+	
+	function get_info(order_id){
+		var fsdate = $("#fsdate").val();
+		var fedate = $("#fedate").val();
+		var user_id = $("#user_id").val();
+
+		$("#view_txt").html("LOADING...");
+		$.post("shop_process.php", {"fsdate" : fsdate, "fedate" : fedate, "user_id" : user_id}, function(data){
+			$("#view_txt").html(data);
+		});
+
+	}
+</script>
+
+<input type="button" value="한국선수" style="width:100px;height:40px;" onclick="javascript:location.href='member.html'">
+<input type="button" value="중국선수" style="width:100px;height:40px;" onclick="javascript:location.href='cmember.html'">
+<input type="button" value="승부예측" style="width:100px;height:40px;" onclick="javascript:location.href='round.html'">
+<input type="button" value="상록수상점" style="width:100px;height:40px;color:blue" onclick="javascript:location.href='shop.html'">
+<br>
+
+<br>
+<input type="text" id="user_id" placeholder="아이디">
+
+<input type="text" name="fsdate" value="<?=date('Y-m-d')?>" onclick="Calendar(this);" id="fsdate"/>
+<input type="text" name="fedate" value="<?=date('Y-m-d')?>" onclick="Calendar(this);" id="fedate"/>
+<button onclick="get_info()" style="height:25px;width:100px;cursor:pointer;" id="id_info">확인</button>
+
+
+
+<div id="view_txt"></div>
+<iframe name="hiddenFrame" style="display:none" title="hiddenFrame"></iframe>
+</body>
+</html>

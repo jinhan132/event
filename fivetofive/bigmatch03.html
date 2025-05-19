@@ -1,0 +1,442 @@
+<?
+	include "top.html";
+
+include "inc_round.php";
+@include "./db/game_".$set_round."_".$set_game.".inc";
+
+$goods1_cnt = 0;
+$goods2_cnt = 0;
+$goods3_cnt = 0;
+
+if($s_uid){
+
+include "/home/www/inc/db_connect.inc";
+	$eventnum = "fivetofive2024_store";
+
+	$sql = "select sum(num1) from tygem_eventlist where eventnum='$eventnum' and user_num=$s_unum and (writeday>='$event_start 00:00:00' and writeday <= '$event_end 23:59:59')";
+	$query = mysql_query($sql, $connect);
+	$data = mysql_fetch_array($query);
+	$num1 = $data[0];
+
+mysql_close($connect);
+
+include "$docPath/inc/db_baduk.inc";
+
+	$account_result = iconv("utf-8","euc-kr","결제완료");
+
+	$sql = "select * from order_account where user_id='$s_uid' and account_result='$account_result' and (goods_item like '%968%' or goods_item like '%969%' or goods_item like '%970%')  and (order_time>='$event_start 00:00:00' and order_time<= '$event_end 00:00:00' )";
+	$query = mysql_query($sql, $con2);
+	while($data = mysql_fetch_array($query)){
+		$goods_item = $data["goods_item"];
+		
+		if( strpos($goods_item, "968") !== false ){
+			$goods1_cnt++;
+		}
+		if( strpos($goods_item, "969") !== false ){
+			$goods2_cnt++;
+		}
+		if( strpos($goods_item, "970") !== false ){
+			$goods3_cnt++;
+		}
+		
+
+	}
+
+	
+}
+
+
+
+
+
+?>
+        <div class="bigm_conwrap conbg_sub">
+            <p class="sub_score sub_shop">
+                <span class="score_title">나의 주간 상록수점수</span>
+                <span class="score_num"><?=number_format($num1)?>점</span>
+            </p>
+            <div class="sub_scorerule sub_shop">
+                <a class="btn_rule_toggle" role="button" href="#" onclick="return false"><span class="txt">참여방법</span></a>
+                <div class="rule_notice" style="display:none;">
+                    <ul class="txt_rule">
+                        <li>매주 응원 아바타 구매 시 상록수점수 획득!</li>
+                        <li>매주 한 아이디당 각 아바타를 2회씩 구매할 수 있으며,<br />
+                            구매 시마다 추가 보너스가 모두 적용됩니다.</li>
+                        <li>이벤트 기간 중에는 항상 응원 아바타 구매 및 응원점수 획득이 가능합니다.</li>
+                        <li>매주 화요일 자정에 아바타 구입 한도가 초기화됩니다.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bigm_con">
+                <a class="shop_banner" href="bigmatch05.html">
+                    <p class="banner_img01"></p>
+                    <p class="banner_img02"></p>
+                    <p class="banner_title"><span>아바타 구매</span>해주시는 분들께 추첨을 통해 선물을!</p>
+                    <p class="banner_txt"><span>자세히 보기</span></p>
+                </a>
+                <div class="shop_top">
+                    <p class="shop_title">아바타 구매로 선수들 <span class="ico_shop_title01">응원하시고</span><span class="ico_shop_title02">추가 보너스</span>도 받아가세요~!</p>
+                    <ul class="shop_title_desc">
+                        <li>한 주에 각 아바타 2회씩만 구매 가능</li>
+                        <li>각 아바타 함께 구매시 추가 보너스</li>
+                    </ul>
+                </div>
+                <div class="shop_con">
+                    <div class="shop_cheerbox">
+                        <dl class="cheerbox_info">
+                            <dt>지급머니</dt>
+                            <dd id="tmoney">513,000,000 T포인트</dd>
+                            <p class="cheerbox_line"></p>
+                            <dt>추가보너스</dt>
+                            <dd id="bonus_tmoney">7천더블 2개</dd>
+                        </dl>
+                        <!-- 구매 가능할 때 state_on, 구매 어려울 때 state_off -->
+                        <button type="button" class="cheerbox_btn state_on" onclick="javascript:f_submit('buy');">
+                            <p class="btn_txt">응원하기</p>
+                            <span class="btn_cashinfo"><span id="tcash">60,000</span>캐시</span>
+                        </button>
+                    </div>
+                    <div class="shop_avatar">
+                        <div class="avatar_top">
+                            <div class="bonus_popup">
+                                <div class="bonus_popup_top">
+                                    <p class="bonus_popup_title">추가 보너스 안내</p>
+                                    <button class="btn_bonus_close"><span>닫기</span></button>
+                                </div>
+                                <div class="bonus_con">
+                                    <table class="bonus_table">
+                                        <colgroup>
+                                        <col width="286px">
+                                        <col width="248px">
+                                        <col width="184px">
+                                        </colgroup>
+                                        <tbody>
+                                            <tr>
+                                                <th>구매 아바타별 추가 보너스</th>
+                                                <th>지급 T포인트<span>(PT)</span></th>
+                                                <th>추가 보너스</th>
+                                            </tr>
+                                            <tr>
+                                                <td>판다</td>
+                                                <td>83,000,000</td>
+                                                <td>슈퍼더블 1개</td>
+                                            </tr>
+                                            <tr>
+                                                <td>백호</td>
+                                                <td>170,000,000</td>
+                                                <td>슈퍼더블 2개</td>
+                                            </tr>
+                                            <tr>
+                                                <td>5대5</td>
+                                                <td>260,000,000</td>
+                                                <td>3천더블 2개</td>
+                                            </tr>
+                                            <tr>
+                                                <td>판다 + 백호</td>
+                                                <td>253,000,000</td>
+                                                <td>3천더블 2개</td>
+                                            </tr>
+                                            <tr>
+                                                <td>판다 + 5대5</td>
+                                                <td>343,000,000</td>
+                                                <td>4천더블 2개</td>
+                                            </tr>
+                                            <tr>
+                                                <td>백호 + 5대5</td>
+                                                <td>430,000,000</td>
+                                                <td>5천더블 2개</td>
+                                            </tr>
+                                            <tr>
+                                                <td>판다 + 백호 + 5대5</td>
+                                                <td>513,000,000</td>
+                                                <td>7천더블 2개</td>
+                                            </tr>
+                                        </tbody>
+                                   </table>
+                                </div>
+                            </div>
+                            <p class="checkbox_all">
+                                <label>
+                                    <input type="checkbox" name="allcbox" value="0" class="bigm_check"><span>전체선택</span>
+                                </label>
+                            </p>
+                            <button type="button" class="btn_bonus_popup"><span>추가 보너스 안내</span></button>
+                        </div>
+                        <form name="thisform" method="post">
+						<p class="avatar_line"></p>
+                        <ul class="avatar_itembox">
+                            <li class="avatar_item01">
+                                <!-- 해당 아바타 2번 구매시 솔드아웃 avatar_soldout -->
+                                <p class="avatar_img"><span class="avatar_soldout"<? if($goods1_cnt<2){?> style="display:none;"<?}?>><span>판매 완료</span></span><img src="//img.tygem.com/images/event/20240403/img/bigm_avatar02.gif"></p>
+                                <p class="avatar_name"><label><input type="checkbox" id="avata1" name="seq[]" value="968" class="bigm_check" <? if($goods1_cnt>=2){?>disabled<?}else{?>checked<?}?>><span>판다</span></label></p>
+                                <dl class="avatar_info">
+                                    <dt class="info_bonus">보너스</dt>
+                                    <dd class="info_bonus_txt">8,300만<br /><span>T포인트</span></dd>
+                                    <dt class="info_score">상록수점수</dt>
+                                    <dd class="info_score_txt">50점</dd>
+                                </dl>
+                                <p class="avatar_cash"><span>10,000</span>캐시</p>
+                            </li>
+                            <li class="avatar_item02">
+                                <p class="avatar_img"><span class="avatar_soldout" <? if($goods2_cnt<2){?> style="display:none;"<?}?>><span>판매 완료</span></span><img src="//img.tygem.com/images/event/20240403/img/bigm_avatar01.gif"></p>
+                                <p class="avatar_name"><label><input type="checkbox" id="avata2" name="seq[]" value="969" class="bigm_check" <? if($goods2_cnt>=2){?>disabled<?}else{?>checked<?}?>><span>백호</span></label></p>
+                                <dl class="avatar_info">
+                                    <dt class="info_bonus">보너스</dt>
+                                    <dd class="info_bonus_txt">1억 7,000만<br /><span>T포인트</span></dd>
+                                    <dt class="info_score">상록수점수</dt>
+                                    <dd class="info_score_txt">100점</dd>
+                                </dl>
+                                <p class="avatar_cash"><span>20,000</span>캐시</p>
+                            </li>
+                            <li class="avatar_item03">
+                                <p class="avatar_img"><span class="avatar_soldout" <? if($goods3_cnt<2){?> style="display:none;"<?}?>><span>판매 완료</span></span><img src="//img.tygem.com/images/event/20240403/img/bigm_avatar03.gif"></p>
+                                <p class="avatar_name"><label><input type="checkbox" id="avata3" name="seq[]" value="970" class="bigm_check" <? if($goods3_cnt>=2){?>disabled<?}else{?>checked<?}?>><span>5대5</span></label></p><!-- disabled -->
+                                <dl class="avatar_info">
+                                    <dt class="info_bonus">보너스</dt>
+                                    <dd class="info_bonus_txt">2억 6,000만<br /><span>T포인트</span></dd>
+                                    <dt class="info_score">상록수점수</dt>
+                                    <dd class="info_score_txt">150점</dd>
+                                </dl>
+                                <p class="avatar_cash"><span>30,000</span>캐시</p>
+                            </li>
+                        </ul>
+						</form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bf_footerwrap">
+            <p>COPYRIGHT&copy; Com2uS TYGEM Corporation ALL RIGHTS RESERVED.</p>
+        </div>
+           
+    </div>
+    <a class="content_top" href="javascript:movePage('bigm_wrap');" id="content_top">
+        <span>TOP</span>
+    </a>
+            
+   
+<script>
+function f_submit(order_type){
+<? if(date("Y-m-d") >= "2024-05-21"){?>	
+	alert("이벤트가 종료되었습니다.");
+	return;
+<?}?>
+	if($("input:checkbox[name='seq[]']:checked").length == 0){
+		alert("응원하실 아바타를 체크 후 구매진행을 해주세요.");
+		return;
+	}
+	
+	window.open("", "kbleague", "width=580 height=500");
+	document.thisform.action = '/tgmall/itemshop2015/avata_buy_event_all.html?type=' + order_type;
+	document.thisform.target = 'kbleague';
+	document.thisform.submit();
+
+}
+
+$(document).on("click", "input:checkbox[name='seq[]']", function () {
+	var goods1 = $("input:checkbox[name='seq[]']").eq(0).is(":checked");
+	var goods2 = $("input:checkbox[name='seq[]']").eq(1).is(":checked");
+	var goods3 = $("input:checkbox[name='seq[]']").eq(2).is(":checked");
+
+	if(goods1 && goods2 && goods3){
+		$("#tcash").html("60,000");
+		$("#tmoney").html("513,000,000 T포인트");
+		$("#bonus_tmoney").html("7천더블 2개");
+	}else if(goods2 && goods3){
+		$("#tcash").html("50,000");
+		$("#tmoney").html("430,000,000 T포인트");
+		$("#bonus_tmoney").html("5천더블 2개");
+	}else if(goods1 && goods3){
+		$("#tcash").html("40,000");
+		$("#tmoney").html("343,000,000 T포인트");
+		$("#bonus_tmoney").html("4천더블 2개");
+	}else if(goods1 && goods2){
+		$("#tcash").html("30,000");
+		$("#tmoney").html("253,000,000 T포인트");
+		$("#bonus_tmoney").html("3천더블 2개");
+	}else if(goods3){
+		$("#tcash").html("30,000");
+		$("#tmoney").html("260,000,000 T포인트");
+		$("#bonus_tmoney").html("3천더블 2개");
+	}else if(goods2){
+		$("#tcash").html("20,000");
+		$("#tmoney").html("170,000,000 T포인트");
+		$("#bonus_tmoney").html("슈퍼더블 2개");
+	}else if(goods1){
+		$("#tcash").html("10,000");
+		$("#tmoney").html("83,000,000 T포인트");
+		$("#bonus_tmoney").html("슈퍼더블 1개");
+	}else{
+		$("#tcash").html("0");
+		$("#tmoney").html("0 T포인트");
+		$("#bonus_tmoney").html("-");
+	}
+});
+$(document).on("click", "input:checkbox[name='allcbox']", function () {
+	
+	if($("input[name='allcbox']").is(":checked")){
+		//$("input[name='seq[]']").prop("checked", true);
+		<? if($goods1_cnt<2){?>$("input:checkbox[name='seq[]']").eq(0).prop("checked", true);<?}?>
+		<? if($goods2_cnt<2){?>$("input:checkbox[name='seq[]']").eq(1).prop("checked", true);<?}?>
+		<? if($goods3_cnt<2){?>$("input:checkbox[name='seq[]']").eq(2).prop("checked", true);<?}?>
+	}else{
+		//$("input[name='seq[]']").prop("checked", false);
+		$("input:checkbox[name='seq[]']").eq(0).prop("checked", false);
+		$("input:checkbox[name='seq[]']").eq(1).prop("checked", false);
+		$("input:checkbox[name='seq[]']").eq(2).prop("checked", false);
+	}
+
+	var goods1 = $("input:checkbox[name='seq[]']").eq(0).is(":checked");
+	var goods2 = $("input:checkbox[name='seq[]']").eq(1).is(":checked");
+	var goods3 = $("input:checkbox[name='seq[]']").eq(2).is(":checked");
+
+	if(goods1 && goods2 && goods3){
+		$("#tcash").html("60,000");
+		$("#tmoney").html("513,000,000 T포인트");
+		$("#bonus_tmoney").html("7천더블 2개");
+	}else if(goods2 && goods3){
+		$("#tcash").html("50,000");
+		$("#tmoney").html("430,000,000 T포인트");
+		$("#bonus_tmoney").html("5천더블 2개");
+	}else if(goods1 && goods3){
+		$("#tcash").html("40,000");
+		$("#tmoney").html("343,000,000 T포인트");
+		$("#bonus_tmoney").html("4천더블 2개");
+	}else if(goods1 && goods2){
+		$("#tcash").html("30,000");
+		$("#tmoney").html("253,000,000 T포인트");
+		$("#bonus_tmoney").html("3천더블 2개");
+	}else if(goods3){
+		$("#tcash").html("30,000");
+		$("#tmoney").html("260,000,000 T포인트");
+		$("#bonus_tmoney").html("3천더블 2개");
+	}else if(goods2){
+		$("#tcash").html("20,000");
+		$("#tmoney").html("170,000,000 T포인트");
+		$("#bonus_tmoney").html("슈퍼더블 2개");
+	}else if(goods1){
+		$("#tcash").html("10,000");
+		$("#tmoney").html("83,000,000 T포인트");
+		$("#bonus_tmoney").html("슈퍼더블 1개");
+	}else{
+		$("#tcash").html("0");
+		$("#tmoney").html("0 T포인트");
+		$("#bonus_tmoney").html("-");
+	}
+	
+
+	});
+</script>
+
+<script>
+    
+    $(function() {
+        $(".btn_intro_popup").click(function() {
+            $(".intro_popup").css("display", "block")
+        });
+        $(".intro_popup .btn_popup_close").click(function() {
+            $(".intro_popup").css("display", "none")
+        });
+        $(".intro_popup .btn_bottom_close").click(function() {
+            $(".intro_popup").css("display", "none")
+        });
+        $(".btn_team_popup").click(function() {
+            $(".team_popup").css("display", "block")
+        });
+        $(".team_popup .btn_popup_close").click(function() {
+            $(".team_popup").css("display", "none")
+        });
+        $(".team_popup .btn_bottom_close").click(function() {
+            $(".team_popup").css("display", "none")
+        });
+        $(".tab_menu01").hover(function() {
+            $(".menu_mal01").css("opacity", "1");
+        }, function (){
+            $(".menu_mal01").css("opacity", "0");
+        });
+        $(".tab_menu02").hover(function() {
+            $(".menu_mal02").css("opacity", "1");
+        }, function (){
+            $(".menu_mal02").css("opacity", "0");
+        });
+        $(".tab_menu03").hover(function() {
+            $(".menu_mal03").css("opacity", "1");
+        }, function (){
+            $(".menu_mal03").css("opacity", "0");
+        });
+        $(".tab_menu04").hover(function() {
+            $(".menu_mal04").css("opacity", "1");
+        }, function (){
+            $(".menu_mal04").css("opacity", "0");
+        });
+        $(".tab_menu05").hover(function() {
+            $(".menu_mal05").css("opacity", "1");
+        }, function (){
+            $(".menu_mal05").css("opacity", "0");
+        });
+        $(".btn_rule_toggle").click(function() {
+            $(".rule_notice").slideToggle();
+        });
+        $(".btn_rule_toggle").click(function() {
+            $(".btn_rule_toggle").toggleClass("on");
+        });
+    
+var goods1 = $("input:checkbox[name='seq[]']").eq(0).is(":checked");
+var goods2 = $("input:checkbox[name='seq[]']").eq(1).is(":checked");
+var goods3 = $("input:checkbox[name='seq[]']").eq(2).is(":checked");	
+if(goods1 && goods2 && goods3){
+		$("#tcash").html("60,000");
+		$("#tmoney").html("513,000,000 T포인트");
+		$("#bonus_tmoney").html("7천더블 2개");
+	}else if(goods2 && goods3){
+		$("#tcash").html("50,000");
+		$("#tmoney").html("430,000,000 T포인트");
+		$("#bonus_tmoney").html("5천더블 2개");
+	}else if(goods1 && goods3){
+		$("#tcash").html("40,000");
+		$("#tmoney").html("343,000,000 T포인트");
+		$("#bonus_tmoney").html("4천더블 2개");
+	}else if(goods1 && goods2){
+		$("#tcash").html("30,000");
+		$("#tmoney").html("253,000,000 T포인트");
+		$("#bonus_tmoney").html("3천더블 2개");
+	}else if(goods3){
+		$("#tcash").html("30,000");
+		$("#tmoney").html("260,000,000 T포인트");
+		$("#bonus_tmoney").html("3천더블 2개");
+	}else if(goods2){
+		$("#tcash").html("20,000");
+		$("#tmoney").html("170,000,000 T포인트");
+		$("#bonus_tmoney").html("슈퍼더블 2개");
+	}else if(goods1){
+		$("#tcash").html("10,000");
+		$("#tmoney").html("83,000,000 T포인트");
+		$("#bonus_tmoney").html("슈퍼더블 1개");
+	}else{
+		$("#tcash").html("0");
+		$("#tmoney").html("0 T포인트");
+		$("#bonus_tmoney").html("-");
+	}	
+	
+	
+	
+	
+	});
+    
+    $(function() {
+        $(".btn_bonus_popup").click(function() {
+            $(".bonus_popup").css("display", "block")
+        });
+        $(".bonus_popup .btn_bonus_close").click(function() {
+            $(".bonus_popup").css("display", "none")
+        });
+    });
+
+    
+function movePage(id) { //이동시 자연스럽게 움직이도록 애니메이션 추가
+	$('html, body').stop().animate({scrollTop: $('#' + id).offset().top}, 700);
+}
+</script>
+
+</body>
+</html>

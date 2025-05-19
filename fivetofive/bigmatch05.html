@@ -1,0 +1,109 @@
+<?
+	include "top.html";
+
+?>
+        <div class="bigm_conwrap conbg_event">
+            <p class="event_object01"><span>상록수 상점 아바타 구매하면 추첨이벤트 자동 응모!</span></p>
+            <p class="event_object02"><span>상록수 상점 아바타 구매하면 추첨이벤트 자동 응모!</span></p>
+            <div class="event_title">
+                <h3><span>한&#183;중 5&#58;5 빅매치 추첨 이벤트</span></h3>
+                <p class="title_desc01">매주 월요일 밤 9시마다 상록수 연구실의 한국 선수 9명이<br />
+                멍타이링 도장의 중국 선수와 5:5 빅매치를 펼칩니다.</p>
+                <span class="title_desc01_txt">매주 월요일</span>
+                <p class="title_desc02">상록수 연구실의 한국 선수분들께 많은 응원 부탁드립니다.</p>
+                <div class="title_img">
+                    <p class="title_object01"></p>
+                    <p class="title_object02"></p>
+                    <p class="title_heart"></p>
+                </div>
+            </div>
+            <div class="event_con">
+                <div class="con_box">
+                    이벤트 기간동안 상록수 전용 상점 내 아바타를 구매해주신 모든 회원은<br />
+                    자동으로 추첨 이벤트에 응모되며,<br />
+                    <span>총 15분을 추첨하여 참가 선수의 자필 휘호가 담긴 고급부채(9명),<br />
+                    피자 세트(3명), 치킨 세트(3명)을 선물로 드립니다.</span>
+                </div>
+                <div class="con_date">
+                    <p class="con_titlebox01"><span>이벤트 기간</span>2024년 4월 16일(화) ~ 5월 20일(월)</p>
+                    <p class="con_titlebox02"><span>당첨자 발표</span>2024년 5월 21일(화) 공지사항 발표 예정</p>
+                </div>
+                <div class="con_gift">
+                    <p class="con_titlebox03"><span>이벤트 경품</span></p>
+                    <ul class="con_giftbox">
+                        <li><p class="img_gift"><img src="//img.tygem.com/images/event/20240403/img/img_event_gift01.png"></p><span class="gift_num">9명</span><span class="gift_name">고급 휘호 부채</span></li>
+                        <li><p class="img_gift"><img src="//img.tygem.com/images/event/20240403/img/img_event_gift02.png"></p><span class="gift_num">3명</span><span class="gift_name">피자 세트</span></li>
+                        <li><p class="img_gift"><img src="//img.tygem.com/images/event/20240403/img/img_event_gift03.png"></p><span class="gift_num">3명</span><span class="gift_name">치킨 세트</span></li>
+                    </ul>
+                    <p class="gift_notice">&#8251;&nbsp;이해를 돕기 위한 이미지입니다.</p>
+                </div>
+            </div>
+        </div>
+        <div class="bf_footerwrap">
+            <p>COPYRIGHT&copy; Com2uS TYGEM Corporation ALL RIGHTS RESERVED.</p>
+        </div>
+           
+    </div>
+    <a class="content_top" href="javascript:movePage('bigm_wrap');" id="content_top">
+        <span>TOP</span>
+    </a>
+            
+   
+<script type="text/javascript" src="//www.tygemgame.com/js/jquery.1.12.4.min.js"></script>
+
+<script>
+    
+    $(function() {
+        $(".btn_intro_popup").click(function() {
+            $(".intro_popup").css("display", "block")
+        });
+        $(".intro_popup .btn_popup_close").click(function() {
+            $(".intro_popup").css("display", "none")
+        });
+        $(".intro_popup .btn_bottom_close").click(function() {
+            $(".intro_popup").css("display", "none")
+        });
+        $(".btn_team_popup").click(function() {
+            $(".team_popup").css("display", "block")
+        });
+        $(".team_popup .btn_popup_close").click(function() {
+            $(".team_popup").css("display", "none")
+        });
+        $(".team_popup .btn_bottom_close").click(function() {
+            $(".team_popup").css("display", "none")
+        });
+        $(".tab_menu01").hover(function() {
+            $(".menu_mal01").css("opacity", "1");
+        }, function (){
+            $(".menu_mal01").css("opacity", "0");
+        });
+        $(".tab_menu02").hover(function() {
+            $(".menu_mal02").css("opacity", "1");
+        }, function (){
+            $(".menu_mal02").css("opacity", "0");
+        });
+        $(".tab_menu03").hover(function() {
+            $(".menu_mal03").css("opacity", "1");
+        }, function (){
+            $(".menu_mal03").css("opacity", "0");
+        });
+        $(".tab_menu04").hover(function() {
+            $(".menu_mal04").css("opacity", "1");
+        }, function (){
+            $(".menu_mal04").css("opacity", "0");
+        });
+        $(".tab_menu05").hover(function() {
+            $(".menu_mal05").css("opacity", "1");
+        }, function (){
+            $(".menu_mal05").css("opacity", "0");
+        });
+    });
+    
+    
+function movePage(id) { //이동시 자연스럽게 움직이도록 애니메이션 추가
+	$('html, body').stop().animate({scrollTop: $('#' + id).offset().top}, 700);
+}
+</script>
+
+</body>
+</html>

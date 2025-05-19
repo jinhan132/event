@@ -1,0 +1,60 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+
+include "../db/member2.inc";
+
+?>
+<!--
+$cuser_id1 = "천정쉰";
+$cuser_nick1 = "chzhxun";
+$cuser_img1 = "";
+
+황밍위 ychmy1
+션페이란
+
+쉐관화 XueGuanHua
+리청선
+정자이샹 ZhengZX
+
+왕슈오 WangShuo1
+천위썬
+황신 huangxin11
+
+천이춘 woshiyichu
+왕추쉬안 wangyouyou
+류치펑 LiuQiFeng
+
+저우즈이 ZhouZiYi
+쩡옌하이 
+청지아예 HUYUQING12
+
+루민취안 LUMINQUAN1
+리샤오시 LiXiaoX
+천이밍 ChenYiM
+-->
+<head>
+<style>
+body{margin:10;padding:10}
+input, select {height:24px;}
+td{font-family:'굴림',Gulim,Helvetica,sans-serif;font-size:13px;color:#000}
+</style>
+
+<input type="button" value="한국선수" style="width:100px;height:40px;" onclick="javascript:location.href='member.html'">
+<input type="button" value="중국선수" style="width:100px;height:40px;color:blue" onclick="javascript:location.href='cmember.html'">
+<input type="button" value="승부예측" style="width:100px;height:40px;" onclick="javascript:location.href='round.html'">
+<input type="button" value="상록수상점" style="width:100px;height:40px;" onclick="javascript:location.href='shop.html'">
+<br>
+
+<form method="post" action="members2_process.php" target="hiddenFrame">
+<? for($i=1; $i<=26; $i++){
+	$cuser_id = "cuser_id".$i;
+	$cuser_nick = "cuser_nick".$i;
+	$cuser_img = "cuser_img".$i;
+?>
+<input type="text" name="cuser_id<?=$i?>" style="width:100px;" value="<?=$$cuser_id?>">
+<input type="text" name="cuser_nick<?=$i?>" style="width:80px;" value="<?=$$cuser_nick?>">
+<input type="text" name="cuser_img<?=$i?>" style="width:300px;" value="<?=$$cuser_img?>"><br>
+<?}?>
+<input type="submit" value="확인">
+</form>
+<iframe name="hiddenFrame" style="display:none" title="hiddenFrame"></iframe>

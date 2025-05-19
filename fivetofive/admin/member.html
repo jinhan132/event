@@ -1,0 +1,33 @@
+<?
+header("Content-Type:text/html;charset=utf-8");
+
+include "../db/member.inc";
+
+?>
+<head>
+<style>
+body{margin:10;padding:10}
+input, select {height:24px;}
+td{font-family:'굴림',Gulim,Helvetica,sans-serif;font-size:13px;color:#000}
+</style>
+
+
+<input type="button" value="한국선수" style="width:100px;height:40px;color:blue" onclick="javascript:location.href='member.html'">
+<input type="button" value="중국선수" style="width:100px;height:40px;" onclick="javascript:location.href='cmember.html'">
+<input type="button" value="승부예측" style="width:100px;height:40px;" onclick="javascript:location.href='round.html'">
+<input type="button" value="상록수상점" style="width:100px;height:40px;" onclick="javascript:location.href='shop.html'">
+<br>
+
+<form method="post" action="members_process.php" target="hiddenFrame">
+<? for($i=1; $i<=10; $i++){
+	$user_id = "user_id".$i;
+	$user_nick = "user_nick".$i;
+	$user_img = "user_img".$i;
+?>
+<input type="text" name="user_id<?=$i?>" style="width:100px;" value="<?=$$user_id?>">
+<input type="text" name="user_nick<?=$i?>" style="width:80px;" value="<?=$$user_nick?>">
+<input type="text" name="user_img<?=$i?>" style="width:300px;" value="<?=$$user_img?>"><br>
+<?}?>
+<input type="submit" value="확인">
+</form>
+<iframe name="hiddenFrame" style="display:none" title="hiddenFrame"></iframe>
